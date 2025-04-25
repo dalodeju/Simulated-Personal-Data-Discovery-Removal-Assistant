@@ -1,0 +1,32 @@
+# Project Configuration
+
+# Web Scraper Settings
+web_scraper:
+  max_retries: 3
+  retry_delay: 1.0
+  confidence_threshold: 0.7
+
+# Data Analyzer Settings
+data_analyzer:
+  spacy_model: 'en_core_web_sm'
+  confidence_threshold: 0.7
+  batch_size: 32
+
+# Risk Evaluator Settings
+risk_evaluator:
+  risk_thresholds:
+    low: 0.3
+    medium: 0.6
+    high: 0.8
+  weights:
+    sensitivity: 0.35
+    exposure: 0.25
+    freshness: 0.15
+    combination: 0.15
+    context: 0.10
+
+# Logging Settings
+logging:
+  level: INFO
+  file: 'agent.log'
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s' 
