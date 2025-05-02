@@ -1,6 +1,6 @@
 # Simulated Personal Data Discovery & Removal Assistant
 
-A robust multi-agent system for discovering, analyzing, and recommending actions on personal data in a simulated digital ecosystem. Developed as a Master's project for Designing Intelligent Agents.
+A robust multi-agent system for discovering, analyzing, and recommending actions on personal data in a simulated digital ecosystem.
 
 ## Project Overview
 
