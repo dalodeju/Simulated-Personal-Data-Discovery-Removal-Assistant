@@ -1,6 +1,6 @@
 """
-Data Analyzer Agent for classifying and understanding sensitive data.
-Uses NLP techniques to analyze and categorize personal information.
+data analyzer agent for classifying and understanding sensitive data.
+this module uses nlp techniques to analyze and categorize personal information.
 """
 
 from typing import List, Dict, Any, Tuple
@@ -17,7 +17,9 @@ from utils.common import setup_logging, ensure_directory
 
 @dataclass
 class AnalyzerConfig:
-    """Configuration for the Data Analyzer Agent"""
+    """
+    configuration for the data analyzer agent.
+    """
     model_path: str = 'models/analyzer'
     spacy_model: str = 'en_core_web_sm'
     confidence_threshold: float = 0.7
@@ -25,18 +27,13 @@ class AnalyzerConfig:
     use_gpu: bool = False
     
     def __post_init__(self):
-        """Ensure model path is a Path object"""
         self.model_path = Path(self.model_path)
 
 class DataAnalyzerAgent:
     """
-    Agent responsible for analyzing and classifying personal data using NLP techniques.
-    Combines rule-based and ML approaches for robust classification.
+    agent for analyzing and classifying personal data using nlp and machine learning.
     """
-    
-    # Default training data for initial model fitting
     DEFAULT_TRAINING_DATA = [
-        # Non-sensitive examples
         ("This is a regular public post about the weather", "not_sensitive"),
         ("Check out this awesome tutorial on Python programming", "not_sensitive"),
         ("The meeting is scheduled for next Monday at 2 PM", "not_sensitive"),
@@ -47,28 +44,18 @@ class DataAnalyzerAgent:
         ("Great news! Our team won the championship", "not_sensitive"),
         ("The movie was really entertaining", "not_sensitive"),
         ("New coffee shop opened downtown", "not_sensitive"),
-        
-        # Financial data examples
         ("My bank account number is 1234567890", "sensitive"),
         ("Credit card details: 4111-1111-1111-1111", "sensitive"),
         ("The total transaction amount is $5000", "sensitive"),
-        
-        # Personal identification examples
         ("My SSN is 123-45-6789", "sensitive"),
         ("Driver's license number: X12345678", "sensitive"),
         ("Passport number: AB123456", "sensitive"),
-        
-        # Contact information examples
         ("You can reach me at john.doe@email.com", "sensitive"),
         ("My phone number is 555-123-4567", "sensitive"),
         ("Home address: 123 Main St, Anytown, USA", "sensitive"),
-        
-        # Medical information examples
         ("Patient diagnosed with type 2 diabetes", "sensitive"),
         ("Prescription: 50mg medication twice daily", "sensitive"),
         ("Medical history includes heart surgery", "sensitive"),
-        
-        # Credential examples
         ("Username: admin Password: secretpass123", "sensitive"),
         ("API key: sk_test_123456789", "sensitive"),
         ("Login credentials for the system", "sensitive")
@@ -77,25 +64,18 @@ class DataAnalyzerAgent:
     def __init__(self, config: AnalyzerConfig):
         self.config = config
         self.logger = setup_logging(__name__)
-        
-        # Initialize NLP components
         try:
             self.nlp = spacy.load(config.spacy_model)
         except OSError:
-            self.logger.warning(f"Downloading {config.spacy_model} model...")
+            self.logger.warning(f"downloading {config.spacy_model} model...")
             spacy.cli.download(config.spacy_model)
             self.nlp = spacy.load(config.spacy_model)
-            
         self.sentiment_analyzer = pipeline(
             "sentiment-analysis",
             model="distilbert-base-uncased-finetuned-sst-2-english",
             device=-1 if not config.use_gpu else 0
         )
-        
-        # Load or initialize ML models
         self._load_or_initialize_models()
-        
-        # Define sensitive data categories and their indicators
         self.categories = {
             'financial': ['bank', 'credit', 'account', 'payment', 'transaction', '$', '€', '£'],
             'medical': ['health', 'medical', 'doctor', 'diagnosis', 'treatment', 'patient', 'prescription'],
@@ -105,18 +85,18 @@ class DataAnalyzerAgent:
         }
 
     def _load_or_initialize_models(self):
-        """Load existing models or initialize and train new ones"""
+        """
+        load classifier and vectorizer models if available, otherwise train new models.
+        """
         ensure_directory(self.config.model_path)
-        
         model_file = self.config.model_path / "classifier.joblib"
         vectorizer_file = self.config.model_path / "vectorizer.joblib"
-        
         try:
             self.classifier = joblib.load(model_file)
             self.vectorizer = joblib.load(vectorizer_file)
-            self.logger.info("Loaded existing models successfully")
+            self.logger.info("loaded existing models successfully")
         except (FileNotFoundError, EOFError):
-            self.logger.info("Initializing and training new models with default data")
+            self.logger.info("training new models with default data")
             self.vectorizer = TfidfVectorizer(
                 max_features=5000,
                 ngram_range=(1, 2),
@@ -128,19 +108,17 @@ class DataAnalyzerAgent:
                 class_weight='balanced',
                 random_state=42
             )
-            
-            # Train with default data
             texts, labels = zip(*self.DEFAULT_TRAINING_DATA)
             X = self.vectorizer.fit_transform(texts)
             self.classifier.fit(X, labels)
-            
-            # Save the trained models
             joblib.dump(self.classifier, model_file)
             joblib.dump(self.vectorizer, vectorizer_file)
-            self.logger.info("Successfully trained and saved new models")
+            self.logger.info("trained and saved new models")
 
     def _extract_entities(self, text: str) -> List[Dict[str, Any]]:
-        """Extract named entities from text using SpaCy"""
+        """
+        extract named entities from text using spacy.
+        """
         doc = self.nlp(text)
         return [{
             'text': ent.text,
@@ -151,7 +129,9 @@ class DataAnalyzerAgent:
         } for ent in doc.ents]
 
     def _analyze_sentiment(self, text: str) -> Dict[str, Any]:
-        """Analyze sentiment of text using transformer model"""
+        """
+        perform sentiment analysis on the input text.
+        """
         try:
             result = self.sentiment_analyzer(text)[0]
             return {
@@ -160,7 +140,7 @@ class DataAnalyzerAgent:
                 'is_negative': result['label'] == 'NEGATIVE'
             }
         except Exception as e:
-            self.logger.error(f"Error in sentiment analysis: {str(e)}")
+            self.logger.error(f"sentiment analysis failed: {str(e)}")
             return {
                 'label': 'UNKNOWN',
                 'score': 0.5,
@@ -168,19 +148,16 @@ class DataAnalyzerAgent:
             }
 
     def _classify_sensitivity(self, text: str) -> Tuple[str, float]:
-        """Classify text sensitivity using ML model"""
+        """
+        classify the sensitivity of the input text using the trained model.
+        returns the predicted class and confidence score.
+        """
         try:
-            # Transform text using vectorizer
             features = self.vectorizer.transform([text])
-            
-            # Get prediction probabilities
             probas = self.classifier.predict_proba(features)[0]
             predicted_class = self.classifier.classes_[np.argmax(probas)]
             confidence = np.max(probas)
-            
-            # Add additional checks for non-sensitive content
             if predicted_class == "sensitive":
-                # Check if text contains any known sensitive patterns
                 has_sensitive_pattern = any(
                     pattern in text.lower()
                     for pattern in [
@@ -189,17 +166,13 @@ class DataAnalyzerAgent:
                         'address', 'medical', 'patient', 'prescription'
                     ]
                 )
-                
                 if not has_sensitive_pattern:
-                    # If no sensitive patterns found, reduce confidence
                     confidence *= 0.5
-                    if confidence < 0.6:  # Threshold for reclassification
+                    if confidence < 0.6:
                         predicted_class = "not_sensitive"
-                        # Boost confidence for clearly non-sensitive text
-                        if len(text.split()) >= 3:  # At least 3 words
+                        if len(text.split()) >= 3:
                             confidence = max(confidence + 0.2, 0.7)
             else:
-                # For predicted non-sensitive text, boost confidence if no sensitive patterns
                 has_sensitive_pattern = any(
                     pattern in text.lower()
                     for pattern in [
@@ -210,45 +183,31 @@ class DataAnalyzerAgent:
                 )
                 if not has_sensitive_pattern:
                     confidence = max(confidence + 0.2, 0.7)
-            
             return predicted_class, confidence
         except Exception as e:
-            self.logger.error(f"Error in sensitivity classification: {str(e)}")
+            self.logger.error(f"error in sensitivity classification: {str(e)}")
             return "unknown", 0.0
 
     def analyze_content(self, content: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Perform comprehensive analysis of content
-        Returns detailed analysis results
+        analyze a content dictionary and return extracted entities, sentiment, sensitivity, risk score, and categories.
         """
         text = content.get('content', '')
         if not text:
             return {
-                'error': 'No content provided',
+                'error': 'no content provided',
                 'risk_score': 0.0,
                 'sensitivity': {'class': 'unknown', 'confidence': 0.0}
             }
-            
         try:
-            # Extract entities
             entities = self._extract_entities(text)
-            
-            # Analyze sentiment
             sentiment = self._analyze_sentiment(text)
-            
-            # Classify sensitivity
             sensitivity_class, sensitivity_conf = self._classify_sensitivity(text)
-            
-            # Calculate initial risk score based on sensitivity
             risk_score = sensitivity_conf if sensitivity_class == 'sensitive' else 0.0
-            
-            # Adjust risk score based on entities and sentiment
             if entities:
-                risk_score += min(len(entities) * 0.1, 0.3)  # Up to 0.3 increase for entities
+                risk_score += min(len(entities) * 0.1, 0.3)
             if sentiment['is_negative']:
-                risk_score += 0.2  # Increase risk for negative sentiment
-                
-            # Identify sensitive data categories
+                risk_score += 0.2
             categories = {}
             for category, indicators in self.categories.items():
                 matches = []
@@ -257,32 +216,17 @@ class DataAnalyzerAgent:
                         matches.append(indicator)
                 if matches:
                     categories[category] = matches
-                    risk_score += 0.1  # Increase risk for each matched category
-            
-            # Normalize final risk score to 0-1 range
+                    risk_score += 0.1
             risk_score = min(risk_score, 1.0)
-            
             return {
-                'content_id': content.get('id'),
-                'timestamp': datetime.now().isoformat(),
                 'entities': entities,
                 'sentiment': sentiment,
-                'sensitivity': {
-                    'class': sensitivity_class,
-                    'confidence': sensitivity_conf
-                },
+                'sensitivity': {'class': sensitivity_class, 'confidence': sensitivity_conf},
                 'risk_score': risk_score,
-                'categories': categories,
-                'metadata': {
-                    'word_count': len(text.split()),
-                    'has_urls': 'http' in text.lower(),
-                    'has_numbers': any(c.isdigit() for c in text),
-                    'analysis_version': '2.0'
-                }
+                'categories': categories
             }
-            
         except Exception as e:
-            self.logger.error(f"Error analyzing content: {str(e)}")
+            self.logger.error(f"error analyzing content: {str(e)}")
             return {
                 'error': str(e),
                 'risk_score': 0.0,
@@ -291,89 +235,37 @@ class DataAnalyzerAgent:
 
     def batch_analyze(self, contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
-        Analyze multiple content items in batch
-        Returns list of analysis results
+        analyze a batch of content dictionaries.
         """
-        results = []
-        
-        for i in range(0, len(contents), self.config.batch_size):
-            batch = contents[i:i + self.config.batch_size]
-            batch_results = []
-            
-            for content in batch:
-                result = self.analyze_content(content)
-                batch_results.append(result)
-            
-            results.extend(batch_results)
-            self.logger.debug(f"Processed batch {i//self.config.batch_size + 1}")
-        
-        return results
+        return [self.analyze_content(content) for content in contents]
 
     def train(self, training_data: List[Tuple[str, str]], save_models: bool = True):
         """
-        Train the ML models on new data
-        Args:
-            training_data: List of (text, label) tuples
-            save_models: Whether to save the models after training
+        train the classifier and vectorizer with new training data.
         """
-        if not training_data:
-            self.logger.warning("No training data provided")
-            return
-            
-        try:
-            texts, labels = zip(*training_data)
-            
-            # Combine with default training data for better generalization
-            all_texts = list(texts) + [text for text, _ in self.DEFAULT_TRAINING_DATA]
-            all_labels = list(labels) + [label for _, label in self.DEFAULT_TRAINING_DATA]
-            
-            # Fit vectorizer and transform texts
-            X = self.vectorizer.fit_transform(all_texts)
-            
-            # Train classifier
-            self.classifier.fit(X, all_labels)
-            
-            if save_models:
-                # Save models
-                ensure_directory(self.config.model_path)
-                joblib.dump(self.classifier, 
-                           self.config.model_path / "classifier.joblib")
-                joblib.dump(self.vectorizer, 
-                           self.config.model_path / "vectorizer.joblib")
-                self.logger.info("Successfully saved updated models")
-                
-        except Exception as e:
-            self.logger.error(f"Error during training: {str(e)}")
-            raise
+        texts, labels = zip(*training_data)
+        X = self.vectorizer.fit_transform(texts)
+        self.classifier.fit(X, labels)
+        if save_models:
+            model_file = self.config.model_path / "classifier.joblib"
+            vectorizer_file = self.config.model_path / "vectorizer.joblib"
+            joblib.dump(self.classifier, model_file)
+            joblib.dump(self.vectorizer, vectorizer_file)
+            self.logger.info("models saved after training")
 
 def main():
-    """Main function to test the Data Analyzer Agent"""
-    # Setup logging
+    """
+    test the data analyzer agent with sample data.
+    """
+    import logging
     logging.basicConfig(level=logging.INFO)
-    
-    # Initialize agent
     config = AnalyzerConfig()
-    agent = DataAnalyzerAgent(config)
-    
-    # Test analysis
+    analyzer = DataAnalyzerAgent(config)
     test_content = {
-        'id': '123',
-        'content': """
-        Hi, my name is John Smith and my credit card number is 1234-5678-9012-3456.
-        Please contact me at john@email.com or call 555-0123 for any questions.
-        """
+        'content': "My SSN is 123-45-6789 and my email is john.doe@email.com."
     }
-    
-    try:
-        result = agent.analyze_content(test_content)
-        print("Analysis Results:")
-        print(f"Risk Score: {result['risk_score']:.2f}")
-        print(f"Detected Categories: {list(result['categories'].keys())}")
-        print(f"Entities Found: {len(result['entities'])}")
-        print(f"Sentiment: {result['sentiment']['label']}")
-    
-    except Exception as e:
-        print(f"Error during testing: {str(e)}")
+    result = analyzer.analyze_content(test_content)
+    print("analysis result:", result)
 
 if __name__ == '__main__':
     main() 

@@ -1,154 +1,138 @@
-# Personal Data Discovery Agent
+# simulated personal data discovery & removal assistant
 
-A focused intelligent agent system for discovering and analyzing personal data in digital environments, developed as part of a Master's project in Designing Intelligent Agents.
+this project is a master's-level simulation of a digital ecosystem, designed to explore how intelligent agents can discover, analyze, and recommend actions for personal data found in synthetic user profiles, posts, and articles. the system is modular, extensible, and built for robust experimentation and evaluation.
 
-## Project Overview
+---
 
-This project implements an intelligent agent system that can:
-- Discover personal data (emails, phone numbers, SSNs, credit cards) in text
-- Analyze data sensitivity and context using NLP
-- Evaluate risk levels using configurable criteria
-- Generate detailed analysis reports and performance metrics
-- Provide data protection recommendations
+## overview
 
-## Features
+the system simulates a digital world with synthetic user data and four main agents:
+- web scraper agent: finds personal data in text using pattern matching.
+- data analyzer agent: classifies and analyzes the sensitivity and context of discovered data.
+- risk evaluator agent: assesses the risk associated with each data item using configurable criteria.
+- recommendation agent: suggests actions for data protection and removal.
 
-### Core Functionality
-- Pattern-based personal data detection using regex
-- NLP-based context analysis using spaCy
-- Machine learning-based sensitivity classification
-- Configurable risk assessment with multiple factors
-- Comprehensive performance metrics and visualization
-- Detailed logging and reporting
+the project supports automated experiments, multiple agent coordination strategies, noise injection, and detailed performance metrics (precision, recall, f1, processing time, and more).
 
-### Technical Features
-- Modular agent architecture with clear separation of concerns
-- Advanced metrics system for performance tracking
-- Comprehensive test suite with 42 test cases
-- YAML-based configuration
-- Efficient batch processing capabilities
+---
 
-## Installation
+## key features
 
-1. Clone the repository:
+- synthetic data generation: realistic, diverse, and noisy user profiles and posts.
+- agent coordination: supports sequential, parallel, and hybrid agent strategies.
+- risk evaluation: flexible, multi-factor risk scoring.
+- metrics & visualization: automated experiment runs, csv export, and plotting.
+- extensible design: easy to add new agents, strategies, or data types.
+
+---
+
+## project structure
+
+main directories and files:
+- `src/agents/` — agent implementations (web_scraper.py, data_analyzer.py, risk_evaluator.py, recommender.py)
+- `src/environment/` — digital ecosystem simulation and data generation
+- `src/experiments/` — experiment runner and coordinator
+- `src/utils/` — utility functions and metrics modules
+- `models/` — trained models (e.g., analyzer models)
+- `experiments/data/` — synthetic datasets
+- `experiments/results/` — experiment outputs and plots
+- `tests/` — test suite for agents and integration
+- `config.yaml` — main configuration file
+- `requirements.txt` — python dependencies
+- `README.md` — project documentation
+
+---
+
+## installation
+
+1. clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <project-directory>
+   ```
+
+2. set up a virtual environment:
+   ```bash
+   python -m venv .venv
+   # on windows:
+   .venv\Scripts\activate
+   # on unix/mac:
+   source .venv/bin/activate
+   ```
+
+3. install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. download required nlp models:
+   ```bash
+   python -m spacy download en_core_web_sm
+   ```
+
+---
+
+## running experiments
+
+to run the full experiment pipeline with all strategies and noise levels:
 ```bash
-git clone <repository-url>
-cd <project-directory>
+python -m src.experiments.run_experiments
 ```
+results, metrics, and plots will be saved in the `experiments/results/` directory.
 
-2. Create and activate a virtual environment:
+---
+
+## configuration
+
+all system and agent settings are managed in `config.yaml`. you can adjust:
+- number of profiles, noise levels, and sensitive data ratio
+- agent-specific thresholds and model paths
+- experiment strategies and number of runs
+
+---
+
+## testing
+
+to run all tests:
 ```bash
-python -m venv .venv
-.venv\Scripts\activate  # On Windows
-source .venv/bin/activate  # On Unix/MacOS
+python -m pytest tests/
 ```
-
-3. Install dependencies:
+you can also run specific test files, for example:
 ```bash
-pip install -r requirements.txt
+python -m pytest tests/test_agents/test_data_analyzer.py
 ```
 
-4. Download required models:
-```bash
-python -m spacy download en_core_web_sm
-```
+---
 
-## Configuration
+## metrics & evaluation
 
-The project uses a YAML configuration file (`config.yaml`) for all settings:
+the system automatically calculates and saves:
+- precision, recall, f1 for discovery, analysis, and risk evaluation
+- processing time and throughput
+- recommendation relevance and coverage
+- plots for performance trends and noise impact
 
-### Agent Configuration
-- Web scraper settings (retries, timeouts, confidence thresholds)
-- Data analyzer settings (model paths, batch size, GPU usage)
-- Risk evaluator settings (risk thresholds, category weights)
-- Recommender settings (priority levels, action types)
+all results are saved as csv and png files for easy analysis.
 
-### System Configuration
-- Logging configuration
-- Performance metrics settings
-- Output directories
-- Model paths
+---
 
-## Project Structure
+## extending the project
 
-```
-src/
-├── agents/                # Agent implementations
-│   ├── base_agent.py     # Abstract base agent class
-│   ├── web_scraper.py    # Web scraping agent
-│   ├── data_analyzer.py  # Data analysis agent
-│   ├── risk_evaluator.py # Risk assessment agent
-│   └── recommender.py    # Recommendation agent
-├── environment/          # Test environment
-├── experiments/         # Experiment configurations and results
-│   ├── data/           # Test datasets
-│   └── results/        # Experiment outputs
-├── utils/              # Utility functions
-│   ├── metrics/        # Performance metrics
-│   │   ├── base.py    # Basic metrics
-│   │   └── experiment.py # Advanced metrics
-│   └── common.py      # Shared utilities
-└── models/            # Trained models
-    └── analyzer/      # Analyzer models
-tests/                 # Test suite
-├── test_agents/      # Agent-specific tests
-├── test_integration/ # Integration tests
-└── test_utils/      # Utility tests
-logs/                 # Log files
-config.yaml          # Configuration file
-requirements.txt     # Dependencies
-```
+- add new agent strategies: implement a new method in the experiment runner and add it to the config.
+- change data generation: edit `src/environment/data_generator.py` for new data types or noise models.
+- customize risk evaluation: adjust weights and thresholds in `src/agents/risk_evaluator.py` or the config.
 
-## Testing
+---
 
-The comprehensive test suite includes:
+## future work
 
-### Component Tests
-- Base Agent (8 tests)
-- Data Analyzer (8 tests)
-- Web Scraper (15 tests)
-- Basic Functionality (5 tests)
-- Configuration (3 tests)
+- real-time or streaming data simulation
+- web-based dashboard for results
+- more advanced nlp and ml models
+- support for additional languages and data types
 
-### Integration Tests
-- End-to-end workflow tests
-- Component interaction tests
-- Error handling tests
+---
 
-Run tests with:
-```bash
-python -m pytest tests/ -v  # All tests
-python -m pytest tests/test_agents/test_data_analyzer.py -v  # Specific component
-```
+## contact
 
-Current test coverage: 42 tests, 100% pass rate
-
-## Performance Metrics
-
-The system includes a comprehensive metrics framework:
-
-### Basic Metrics
-- Processing time and throughput
-- Success/error rates
-- Risk assessment accuracy
-
-### Advanced Metrics
-- Discovery precision/recall
-- Sensitivity classification accuracy
-- Risk correlation analysis
-- Recommendation relevance
-
-### Visualization
-- Metrics trends over time
-- Correlation matrices
-- Performance comparisons
-
-## Future Work
-
-Planned improvements:
-- Real-time monitoring capabilities
-- Multi-language support
-- Web interface for visualization
-- Enhanced ML model training
-- Additional data type support
-- Distributed processing support
+for questions or collaboration, please contact the project maintainer.

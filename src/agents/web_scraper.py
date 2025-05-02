@@ -1,5 +1,6 @@
-"""Personal data discovery using regex patterns.
-Finds stuff like emails, phone numbers, SSNs, etc. in text.
+"""
+personal data discovery using regular expressions.
+this module provides functionality to identify personal data such as emails, phone numbers, and other identifiers in text.
 """
 
 import re
@@ -12,14 +13,14 @@ from environment.ecosystem import DigitalEcosystem, EcosystemConfig
 from utils.common import setup_logging, load_config
 import logging
 
-# Load configuration
-config = load_config().get('web_scraper', {
+# load configuration for the web scraper agent
+default_config = load_config().get('web_scraper', {
     'max_retries': 3,
     'retry_delay': 1.0,
     'confidence_threshold': 0.7
 })
 
-# Regex patterns for finding personal data
+# regular expression patterns for personal data types
 PATTERNS = {
     'email': r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
     'phone': r'\b(?:\+?1[-.]?)?\(?([0-9]{3})\)?[-.]?([0-9]{3})[-.]?([0-9]{4})\b',
@@ -31,18 +32,21 @@ PATTERNS = {
 }
 
 class ValidationError(Exception):
-    """Custom exception for input validation errors"""
+    """
+    exception for invalid configuration or input values.
+    """
     pass
 
 @dataclass
 class ScraperConfig:
-    """Configuration for the WebScraperAgent"""
-    max_retries: int = config.get('max_retries', 3)
-    retry_delay: float = config.get('retry_delay', 1.0)
-    confidence_threshold: float = config.get('confidence_threshold', 0.7)
+    """
+    configuration for the web scraper agent.
+    """
+    max_retries: int = default_config.get('max_retries', 3)
+    retry_delay: float = default_config.get('retry_delay', 1.0)
+    confidence_threshold: float = default_config.get('confidence_threshold', 0.7)
     
     def __post_init__(self):
-        """Validate configuration values"""
         if self.max_retries < 1:
             raise ValidationError("max_retries must be at least 1")
         if self.retry_delay < 0:
@@ -51,103 +55,72 @@ class ScraperConfig:
             raise ValidationError("confidence_threshold must be between 0 and 1")
 
 class WebScraperAgent:
-    """Agent for discovering personal data in text using pattern matching."""
-    
+    """
+    agent for extracting personal data from text using regular expressions.
+    """
     def __init__(self, ecosystem: Optional[DigitalEcosystem] = None, config: Optional[ScraperConfig] = None):
-        """Initialize WebScraperAgent with ecosystem and config"""
         super().__init__()
         self.ecosystem = ecosystem
         self.config = config or ScraperConfig()
         self.logger = logging.getLogger(__name__)
-        
-        # Initialize regex patterns for personal data discovery
+        # compile regular expressions for efficiency
         self.patterns = {
-            'email': re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'),
+            'email': re.compile(PATTERNS['email']),
             'phone': re.compile(r'\+?1?\d{9,15}|\(\d{3}\)\s*\d{3}[-.]?\d{4}|\d{3}[-.]?\d{3}[-.]?\d{4}'),
             'ssn': re.compile(r'\d{3}-\d{2}-\d{4}'),
             'credit_card': re.compile(r'\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}'),
             'date_of_birth': re.compile(r'\d{2}[/-]\d{2}[/-]\d{4}'),
             'ip_address': re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'),
-            'url': re.compile(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[^\s]*')
+            'url': re.compile(PATTERNS['url'])
         }
-        
-        # Setup logging
-        self.logger.info("Initializing web scraper agent...")
+        self.logger.info("web scraper agent initialized")
         
     def _extract_personal_data(self, text: str) -> Dict[str, List[str]]:
         """
-        Extract personal data from text using regex patterns.
-        
-        Args:
-            text: Text to scan for personal data
-            
-        Returns:
-            Dictionary mapping data types to lists of found values
+        extract personal data from text using regular expressions.
+        returns a dictionary mapping data types to lists of matches.
         """
-        # Handle None or empty input gracefully
         if text is None:
-            self.logger.warning("None value provided for scanning")
+            self.logger.warning("input text is None")
             return {}
-            
         if not isinstance(text, str):
             text = str(text)
-            self.logger.warning(f"Converting non-string input to string: {type(text)}")
-            
+            self.logger.warning(f"converted non-string input to string: {type(text)}")
         if not text.strip():
-            self.logger.warning("Empty text provided for scanning")
+            self.logger.warning("input text is empty")
             return {}
-            
         results = {}
-        
         try:
-            # Look for each type of data
             for data_type, pattern in self.patterns.items():
-                # Find all matches
                 matches = pattern.findall(text)
                 if matches:
-                    # Clean and format matches
                     cleaned_matches = []
                     for match in matches:
                         if isinstance(match, tuple):
-                            # Handle grouped matches (like phone numbers)
                             cleaned_match = '-'.join(match)
                         else:
                             cleaned_match = match.strip()
                         if cleaned_match:
                             cleaned_matches.append(cleaned_match)
-                            
                     if cleaned_matches:
-                        self.logger.debug(f"Found {len(cleaned_matches)} matches for {data_type}")
+                        self.logger.debug(f"found {len(cleaned_matches)} matches for {data_type}")
                         results[data_type] = cleaned_matches
-                    
             return results
         except Exception as e:
-            self.logger.error(f"Error extracting personal data: {str(e)}")
+            self.logger.error(f"error extracting personal data: {str(e)}")
             return {}
-            
+        
     def _calculate_confidence(self, text: str, data_type: str) -> float:
         """
-        Calculate confidence score for a particular type of data.
-        
-        Args:
-            text: Text containing the data
-            data_type: Type of personal data to calculate confidence for
-            
-        Returns:
-            Confidence score between 0.0 and 1.0
+        calculate confidence score for a detected data type in the text.
         """
         try:
             if not text or data_type not in self.patterns:
                 return 0.0
-                
             matches = self.patterns[data_type].findall(text)
             if not matches:
                 return 0.0
-                
-            # Base confidence from matches (up to 0.6)
             base_confidence = min(len(matches) / 2, 1.0) * 0.6
-            
-            # Context words that increase confidence
             context_words = {
                 'email': ['contact', 'email', '@', 'mail', 'address', 'e-mail', 'Email', 'EMAIL'],
                 'phone': ['call', 'phone', 'tel', 'contact', 'mobile', 'number', 'Phone', 'PHONE'],
@@ -157,63 +130,46 @@ class WebScraperAgent:
                 'ip_address': ['ip', 'address', 'server', 'network', 'host', 'IP'],
                 'url': ['website', 'link', 'site', 'web', 'http', 'https', 'URL']
             }
-            
-            # Context score (up to 0.4)
             context_score = 0.0
             if data_type in context_words:
-                # Check for context words in the text
                 text_lower = text.lower()
                 context_matches = sum(1 for word in context_words[data_type] if word.lower() in text_lower)
                 context_score = min(context_matches / len(context_words[data_type]), 1.0) * 0.4
-                
-            # Format validation (0.3 if valid)
             format_score = 0.3 if self._validate_format(matches[0], data_type) else 0.0
-                
-            # Additional boost for exact field matches (0.2)
             field_boost = 0.2 if any(
                 field.lower() == data_type.replace('_', ' ') or
                 field.lower() == data_type or
                 field.lower() in [w.lower() for w in context_words.get(data_type, [])]
                 for field in text.split()
             ) else 0.0
-                
-            # Combine scores with proper weighting
             confidence = min(
                 base_confidence + context_score + format_score + field_boost,
                 1.0
             )
-            
             self.logger.debug(
-                f"Confidence for {data_type}: base={base_confidence:.2f}, "
+                f"confidence for {data_type}: base={base_confidence:.2f}, "
                 f"context={context_score:.2f}, format={format_score:.2f}, "
                 f"field_boost={field_boost:.2f}, total={confidence:.2f}"
             )
-            
             return confidence
-            
         except Exception as e:
-            self.logger.error(f"Error calculating confidence: {str(e)}")
+            self.logger.error(f"error calculating confidence: {str(e)}")
             return 0.0
-            
+        
     def _validate_format(self, value: str, data_type: str) -> bool:
-        """Additional format validation for specific data types"""
+        """
+        validate the format of a detected value for a given data type.
+        """
         try:
             if data_type == 'email':
-                # Check for valid email format
                 return '@' in value and '.' in value.split('@')[1]
-                
             elif data_type == 'phone':
-                # Check for valid phone number length
                 digits = ''.join(filter(str.isdigit, value))
                 return 10 <= len(digits) <= 15
-                
             elif data_type == 'credit_card':
-                # Basic Luhn algorithm check
                 digits = ''.join(filter(str.isdigit, value))
                 if len(digits) < 13 or len(digits) > 19:
                     return False
-                    
-                # Luhn algorithm
                 total = 0
                 is_even = False
                 for d in reversed(digits):
@@ -225,121 +181,81 @@ class WebScraperAgent:
                     total += d
                     is_even = not is_even
                 return total % 10 == 0
-                
             elif data_type == 'ip_address':
-                # Check valid IP address format
                 parts = value.split('.')
                 return len(parts) == 4 and all(0 <= int(p) <= 255 for p in parts)
-                
-            return True  # Default to True for other types
-            
+            return True
         except Exception:
             return False
-        
+    
     def discover_profile_data(self, query: str) -> List[Dict]:
         """
-        Discover and extract personal data from profiles matching the query.
-        
-        Args:
-            query: Search query to find relevant profiles
-            
-        Returns:
-            List of dictionaries containing extracted profile data and confidence scores
+        search for profiles matching the query and extract personal data from them.
+        returns a list of dictionaries with extracted data.
         """
         if not query or not self.ecosystem:
-            self.logger.debug("Empty query or no ecosystem")
+            self.logger.debug("empty query or no ecosystem provided")
             return []
-            
         try:
-            # Search for matching profiles
             profiles = self.ecosystem.search_profiles(query)
-            self.logger.debug(f"Found {len(profiles)} profiles")
-            
+            self.logger.debug(f"found {len(profiles)} profiles")
             if not profiles:
-                self.logger.info(f"No profiles found matching query: {query}")
+                self.logger.info(f"no profiles found for query: {query}")
                 return []
-                
             results = []
             for profile in profiles:
-                self.logger.debug(f"Processing profile: {profile}")
-                
-                # Convert profile to string for scanning if it's a dictionary
+                self.logger.debug(f"processing profile: {profile}")
                 if isinstance(profile, dict):
-                    # Create a string representation of the profile content
                     content = f"Email: {profile.get('email', '')}\n"
                     content += f"Phone: {profile.get('phone', '')}\n"
-                    # Add any other fields that might contain personal data
                     for key, value in profile.items():
                         if key not in ['id', 'email', 'phone', 'visibility']:
                             content += f"{key}: {value}\n"
                 else:
                     content = getattr(profile, 'content', str(profile))
-                
-                self.logger.debug(f"Profile content: {content}")
-                
-                # Extract personal data from profile content
+                self.logger.debug(f"profile content: {content}")
                 personal_data = self._extract_personal_data(content)
-                self.logger.debug(f"Extracted personal data: {personal_data}")
-                
+                self.logger.debug(f"extracted personal data: {personal_data}")
                 if not personal_data:
-                    self.logger.debug("No personal data found in profile")
+                    self.logger.debug("no personal data found in profile")
                     continue
-                    
-                # Calculate confidence scores for each data type
                 confidence_scores = {
                     data_type: self._calculate_confidence(content, data_type)
                     for data_type in personal_data.keys()
                 }
-                self.logger.debug(f"Confidence scores: {confidence_scores}")
-                
-                # Filter out low confidence results
+                self.logger.debug(f"confidence scores: {confidence_scores}")
                 filtered_data = {
                     data_type: values
                     for data_type, values in personal_data.items()
                     if confidence_scores[data_type] >= self.config.confidence_threshold
                 }
-                self.logger.debug(f"Filtered data: {filtered_data}")
-                
+                self.logger.debug(f"filtered data: {filtered_data}")
                 if filtered_data:
                     profile_id = profile['id'] if isinstance(profile, dict) else getattr(profile, 'id', None)
                     profile_metadata = {
                         'visibility': profile.get('visibility') if isinstance(profile, dict) else getattr(profile, 'visibility', None)
                     }
-                    
                     result = {
                         'profile_id': profile_id,
                         'personal_data': filtered_data,
                         'confidence_scores': confidence_scores,
                         'profile_metadata': profile_metadata
                     }
-                    self.logger.debug(f"Adding result: {result}")
+                    self.logger.debug(f"adding result: {result}")
                     results.append(result)
-                    
-            self.logger.info(f"Found {len(results)} profiles with personal data")
+            self.logger.info(f"found {len(results)} profiles with personal data")
             return results
-            
         except Exception as e:
-            self.logger.error(f"Error discovering profile data: {str(e)}")
+            self.logger.error(f"error discovering profile data: {str(e)}")
             return []
-            
+    
     def _retry_operation(self, operation):
         """
-        Retry an operation with exponential backoff.
-        
-        Args:
-            operation: Function to retry
-            
-        Returns:
-            Result of the operation
-            
-        Raises:
-            Exception: If all retries fail
+        try an operation a few times
         """
         import time
-        
         retries = 0
         last_error = None
-        
         while retries < self.config.max_retries:
             try:
                 return operation()
@@ -347,9 +263,8 @@ class WebScraperAgent:
                 last_error = e
                 retries += 1
                 if retries == self.config.max_retries:
-                    self.logger.error(f"Operation failed after {retries} retries: {str(e)}")
+                    self.logger.error(f"operation failed after {retries} retries: {str(e)}")
                     raise last_error
-                    
                 wait_time = self.config.retry_delay * (2 ** (retries - 1))
-                self.logger.warning(f"Operation failed (attempt {retries}), retrying in {wait_time}s...")
+                self.logger.warning(f"operation failed (attempt {retries}), retrying in {wait_time}s...")
                 time.sleep(wait_time) 

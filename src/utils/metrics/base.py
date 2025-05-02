@@ -1,5 +1,6 @@
-"""Performance tracking for the personal data system.
-Keeps track of how well we're doing at finding and handling personal data.
+"""
+performance tracking for the personal data system.
+this module provides functions for calculating and formatting system performance metrics.
 """
 
 from typing import Dict, Any
@@ -7,26 +8,23 @@ from datetime import datetime
 from collections import Counter
 
 def calculate_metrics(results):
-    """Figure out how well the system is performing
-    
-    Takes the results from all processing stages and calculates
-    various performance metrics like timing and success rates.
     """
-    # Setup our metrics structure
+    calculate system performance metrics from experiment results.
+    returns a dictionary with timing, performance, and summary statistics.
+    """
+    # set up our metrics structure
     metrics = {
         'timestamp': datetime.now().isoformat(),
         'timing': {},
         'performance': {},
         'summary': {}
     }
-    
     try:
-        # How long did it take?
+        # how long did it take?
         start = datetime.fromisoformat(results['timestamp'])
         end = datetime.now()
         processing_time = (end - start).total_seconds()
-        
-        # Get timing stats
+        # get timing stats
         discoveries = results['stages']['discovery']
         metrics['timing'] = {
             'total_processing_time': processing_time,
@@ -35,17 +33,15 @@ def calculate_metrics(results):
                 else 0
             )
         }
-        
-        # How many things did we find?
+        # how many things did we find?
         found_items = len(discoveries)
-        # Handle analysis as a list
+        # handle analysis as a list
         analysis = results['stages']['analysis']
         risky_items = sum(
             1 for item in analysis
             if item.get('sensitivity', {}).get('class') == 'sensitive'
         )
-        
-        # Calculate performance stats
+        # calculate performance stats
         metrics['performance'] = {
             'items_discovered': found_items,
             'high_risk_items': risky_items,
@@ -54,14 +50,13 @@ def calculate_metrics(results):
                 else 0
             )
         }
-        
-        # Handle risk as a list
+        # handle risk as a list
         risks = results['stages']['risk']
         if isinstance(risks, list):
             risk_levels = [r.get('level', 'unknown') for r in risks]
-            # Count each risk level
+            # count each risk level
             level_counts = Counter(risk_levels)
-            # Most severe risk (critical > high > medium > low > unknown)
+            # most severe risk (critical > high > medium > low > unknown)
             level_order = ['low', 'medium', 'high', 'critical']
             def level_value(lvl):
                 try:
@@ -73,8 +68,7 @@ def calculate_metrics(results):
             risk_levels = [risks.get('level', 'unknown')]
             level_counts = Counter(risk_levels)
             most_severe = risk_levels[0]
-        
-        # Handle recommendations as a list
+        # handle recommendations as a list
         recs = results['stages']['recommendations']
         if isinstance(recs, list):
             total_recs = sum(
@@ -83,47 +77,44 @@ def calculate_metrics(results):
             )
         else:
             total_recs = len(recs.get('priority_actions', [])) + len(recs.get('protection_measures', []))
-        
-        # Get the final results
+        # get the final results
         metrics['summary'] = {
             'risk_level': most_severe,
             'risk_level_counts': dict(level_counts),
             'recommendations_count': total_recs
         }
-        
         return metrics
-        
     except Exception as e:
-        # Something went wrong - return error state
+        # something went wrong - return error state
         return {
-            'error': f"Couldn't calculate metrics: {str(e)}",
+            'error': f"couldn't calculate metrics: {str(e)}",
             'timestamp': datetime.now().isoformat()
         }
 
 def format_metrics_report(metrics):
-    """Make the metrics look nice for humans"""
-    # Handle errors gracefully
+    """
+    format the metrics dictionary into a human-readable report string.
+    """
+    # handle errors gracefully
     if 'error' in metrics:
-        return f"Error calculating metrics: {metrics['error']}"
-        
-    # Build a nice report
+        return f"error calculating metrics: {metrics['error']}"
+    # build a nice report
     report = [
-        "Performance Metrics Report",
+        "performance metrics report",
         "========================",
         "",
-        "Timing Metrics:",
-        f"- Total Processing Time: {metrics['timing']['total_processing_time']:.2f} seconds",
-        f"- Processing Rate: {metrics['timing']['processing_rate']:.2f} items/second",
+        "timing metrics:",
+        f"- total processing time: {metrics['timing']['total_processing_time']:.2f} seconds",
+        f"- processing rate: {metrics['timing']['processing_rate']:.2f} items/second",
         "",
-        "Performance Metrics:",
-        f"- Items Discovered: {metrics['performance']['items_discovered']}",
-        f"- High Risk Items: {metrics['performance']['high_risk_items']}",
-        f"- High Risk Ratio: {metrics['performance']['high_risk_ratio']:.2%}",
+        "performance metrics:",
+        f"- items discovered: {metrics['performance']['items_discovered']}",
+        f"- high risk items: {metrics['performance']['high_risk_items']}",
+        f"- high risk ratio: {metrics['performance']['high_risk_ratio']:.2%}",
         "",
-        "Summary:",
-        f"- Most Severe Risk Level: {metrics['summary']['risk_level']}",
-        f"- Risk Level Counts: {metrics['summary']['risk_level_counts']}",
-        f"- Total Recommendations: {metrics['summary']['recommendations_count']}"
+        "summary:",
+        f"- most severe risk level: {metrics['summary']['risk_level']}",
+        f"- risk level counts: {metrics['summary']['risk_level_counts']}",
+        f"- total recommendations: {metrics['summary']['recommendations_count']}"
     ]
-    
     return "\n".join(report) 
