@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Simulated Personal Data Discovery & Removal Assistant
 
 A robust multi-agent system for discovering, analyzing, and recommending actions on personal data in a simulated digital ecosystem. Developed as a Master's project for Designing Intelligent Agents.
@@ -29,14 +28,13 @@ The system supports experiments to analyze:
 
 1. Clone the repository:
    ```bash
-   git clone <https://github.com/dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant>
-   cd <https://github.com/dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant>
+   git clone <dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant>
+   cd <dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant>
    ```
 2. Create and activate a virtual environment:
    ```bash
    python -m venv .venv
-   .venv\Scripts\activate  # On Windows
-   source .venv/bin/activate  # On Unix/MacOS
+   .venv\Scripts\activate 
    ```
 3. Install dependencies:
    ```bash
@@ -112,22 +110,9 @@ Key plots include:
 - **Risk Evaluation Agent**: Assigns risk scores based on content features
 - **Recommendation Agent**: Recommends steps for data removal or protection
 
-## Customization & Extension
-
-- Add new agent strategies or risk configs in `experiments/run_experiments.py`
-- Modify data generation in `src/environment/ecosystem.py`
-- Update model training in `src/agents/data_analyzer.py`
-
 ## Future Work
 
 - Real-time or online agent coordination
 - More advanced NLP and risk models
 - Web-based results dashboard
 - Support for additional data types and languages
-
----
-
-For any questions or contributions, please open an issue or pull request.
-=======
-# Simulated-Personal-Data-Discovery-Removal-Assistant
->>>>>>> 1baf3fc75e09db1c23b0482137c6385bad8193bd
