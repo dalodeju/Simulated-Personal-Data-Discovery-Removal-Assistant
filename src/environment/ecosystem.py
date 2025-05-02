@@ -1,6 +1,6 @@
 """
-digital ecosystem simulation for the personal data assistant.
-this module simulates user profiles and posts for agent evaluation.
+Digital Ecosystem Simulation for Personal Data Discovery & Removal Assistant.
+This module provides a simulated environment where agents can discover and analyze personal data.
 """
 
 import json
@@ -14,21 +14,20 @@ import time
 
 @dataclass
 class EcosystemConfig:
-    """
-    configuration for the digital ecosystem simulation.
-    """
+    """Configuration for the digital ecosystem"""
     data_path: str = 'experiments/data'
-    access_delay: Tuple[float, float] = (0.1, 0.5)
+    access_delay: Tuple[float, float] = (0.1, 0.5)  # Random delay range in seconds
     error_rate: float = 0.1
-    cache_size: int = 1000
+    cache_size: int = 1000  # Number of items to cache
     rate_limit: int = 100
-    rate_window: int = 3600
+    rate_window: int = 3600  # 1 hour in seconds
 
 class DigitalEcosystem:
     """
-    class for simulating a digital environment with user profiles and posts.
-    provides methods for searching and retrieving synthetic data.
+    Simulates a digital ecosystem for testing agent interactions.
+    Provides controlled environment with simulated errors and delays.
     """
+    
     def __init__(self, config: EcosystemConfig):
         self.config = config
         self._profiles: Dict[str, Dict] = {}
@@ -39,24 +38,20 @@ class DigitalEcosystem:
         self.profiles = self._initialize_test_profiles()
 
     def _load_data(self) -> None:
-        """
-        load profiles and posts from data files.
-        raises an error if files are missing.
-        """
+        """Load profiles and posts from data files"""
         try:
             with open(os.path.join(self.config.data_path, 'profiles.json'), 'r') as f:
                 profiles = json.load(f)
                 self._profiles = {p['id']: p for p in profiles}
+            
             with open(os.path.join(self.config.data_path, 'posts.json'), 'r') as f:
                 posts = json.load(f)
                 self._posts = {p['id']: p for p in posts}
         except FileNotFoundError:
-            raise RuntimeError("data files not found. run data_generator.py first.")
+            raise RuntimeError("Data files not found. Run data_generator.py first.")
 
     def _initialize_test_profiles(self) -> List[Dict[str, Any]]:
-        """
-        create a set of test profiles with a mix of real, noisy, and obfuscated data.
-        """
+        """Generate a diverse set of 50 test profiles with varied, noisy, and obfuscated data."""
         names = ['John Doe', 'Jane Smith', 'Bob Wilson', 'Alice Brown', 'Eve Adams', 'Tom Lee', 'Sara King', 'Mike Fox', 'Nina Ray', 'Omar Zed']
         email_bases = ['john.doe', 'jane.smith', 'bob.wilson', 'alice.brown', 'eve.adams', 'tom.lee', 'sara.king', 'mike.fox', 'nina.ray', 'omar.zed']
         domains = ['example.com', 'email.com', 'web.net', 'site.org', 'mail.co']
@@ -65,23 +60,30 @@ class DigitalEcosystem:
         for i in range(50):
             idx = random.randint(0, 9)
             name = names[idx]
+            # Email with 80% chance, sometimes obfuscated
             if random.random() > 0.2:
                 email = f"{email_bases[idx]}@{random.choice(domains)}"
                 if random.random() < 0.2:
                     email = email.replace('@', ' at ')
             else:
                 email = ''
+            # Phone with 70% chance, sometimes obfuscated
             if random.random() > 0.3:
                 phone = f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
                 if random.random() < 0.2:
                     phone = phone.replace('-', ' ')
             else:
                 phone = ''
+            # SSN with 30% chance
             ssn = f"{random.randint(100,999)}-{random.randint(10,99)}-{random.randint(1000,9999)}" if random.random() < 0.3 else ''
+            # Credit card with 20% chance
             credit_card = f"{random.randint(4000,5999)}-{random.randint(1000,9999)}-{random.randint(1000,9999)}-{random.randint(1000,9999)}" if random.random() < 0.2 else ''
+            # Add some distractor fields
             nickname = name.split()[0].lower() + str(random.randint(1,99)) if random.random() < 0.5 else ''
             address = f"{random.randint(100,999)} Main St" if random.random() < 0.3 else ''
+            # Visibility
             visibility = random.choice(visibilities)
+            # Compose profile
             profile = {
                 'id': str(i+1),
                 'name': name,
@@ -93,6 +95,7 @@ class DigitalEcosystem:
                 'address': address,
                 'visibility': visibility,
             }
+            # Ground truth
             gt = []
             for field in ['email', 'phone', 'ssn', 'credit_card']:
                 if profile.get(field):
@@ -102,141 +105,179 @@ class DigitalEcosystem:
         return profiles
 
     def _check_rate_limit(self) -> bool:
-        """
-        check if the rate limit for requests has been exceeded.
-        """
+        """Check if current request is within rate limits"""
         now = time.time()
-        self.request_times = [t for t in self.request_times if now - t < self.config.rate_window]
+        
+        # Remove old requests outside the window
+        self.request_times = [t for t in self.request_times 
+                            if now - t < self.config.rate_window]
+        
+        # Check if we're within limits
         if len(self.request_times) >= self.config.rate_limit:
             return False
+            
         self.request_times.append(now)
         return True
 
     def _simulate_delay(self):
-        """
-        simulate network or server delay.
-        """
+        """Simulate network/processing delay"""
         delay = random.uniform(self.config.access_delay[0], self.config.access_delay[1])
         time.sleep(delay)
 
     def _simulate_error(self) -> bool:
-        """
-        randomly simulate an error based on the configured error rate.
-        """
+        """Simulate random errors"""
         return random.random() < self.config.error_rate
 
     def search_profiles(self, query: str) -> List[Dict[str, Any]]:
         """
-        search for profiles matching the query string.
-        may raise errors or be slow depending on simulation settings.
+        Search for profiles matching the query string.
+        Simulates basic search functionality with potential errors and delays.
         """
         if not self._check_rate_limit():
-            raise Exception("rate limit exceeded")
+            raise Exception("Rate limit exceeded")
+            
         self._simulate_delay()
+        
+        # In test environment, don't simulate errors for empty queries
         if query and self._simulate_error():
-            raise Exception("search operation failed")
+            raise Exception("Search operation failed")
+            
+        # Simple case-insensitive search
         query = query.lower()
         results = []
+        
         for profile in self.profiles:
-            if any(str(value).lower().find(query) != -1 for value in profile.values()):
-                results.append(profile.copy())
+            # Match any field containing the query
+            if any(str(value).lower().find(query) != -1 
+                  for value in profile.values()):
+                results.append(profile.copy())  # Return a copy to prevent modification
+                
         return results
 
     def get_profile(self, profile_id: str) -> Dict[str, Any]:
         """
-        fetch a profile by id.
+        Retrieve a specific profile by ID.
+        Simulates profile lookup with potential errors and delays.
         """
         if not self._check_rate_limit():
-            raise Exception("rate limit exceeded")
+            raise Exception("Rate limit exceeded")
+            
         self._simulate_delay()
         if self._simulate_error():
-            raise Exception("profile lookup failed")
+            raise Exception("Profile lookup failed")
+            
         for profile in self.profiles:
             if profile['id'] == profile_id:
                 return profile.copy()
+                
         return None
 
     def get_profile_posts(self, profile_id: str) -> List[Dict[str, Any]]:
-        """
-        get all posts for a profile.
-        """
+        """Get all posts associated with a profile"""
         if not self._check_rate_limit():
-            raise Exception("rate limit exceeded")
+            raise Exception("Rate limit exceeded")
+        
         self._simulate_delay()
         if self._simulate_error():
-            raise Exception("failed to retrieve posts")
-        return [post for post in self._posts.values() if post['profile_id'] == profile_id]
+            raise Exception("Failed to retrieve posts")
+
+        return [post for post in self._posts.values() 
+                if post['profile_id'] == profile_id]
 
     def get_post_by_id(self, post_id: str) -> Optional[Dict[str, Any]]:
-        """
-        fetch a post by id.
-        """
+        """Retrieve a specific post by ID"""
         if not self._check_rate_limit():
-            raise Exception("rate limit exceeded")
+            raise Exception("Rate limit exceeded")
+        
         self._simulate_delay()
         if self._simulate_error():
-            raise Exception("failed to retrieve post")
+            raise Exception("Failed to retrieve post")
+
         return self._posts.get(post_id)
 
     def get_profile_by_id(self, profile_id: str) -> Optional[Dict[str, Any]]:
-        """
-        fetch a profile by id (alternative method).
-        """
+        """Retrieve a specific profile by ID"""
         if not self._check_rate_limit():
-            raise Exception("rate limit exceeded")
+            raise Exception("Rate limit exceeded")
+        
         self._simulate_delay()
         if self._simulate_error():
-            raise Exception("failed to retrieve profile")
-        for profile in self.profiles:
-            if profile['id'] == profile_id:
-                return profile.copy()
-        return None
+            raise Exception("Failed to retrieve profile")
 
-    def search_posts(self, query: str, start_date: Optional[str] = None, end_date: Optional[str] = None) -> List[Dict[str, Any]]:
+        return self._profiles.get(profile_id)
+
+    def search_posts(self, query: str, 
+                    start_date: Optional[str] = None,
+                    end_date: Optional[str] = None) -> List[Dict[str, Any]]:
         """
-        search posts for a keyword, optionally within a date range.
+        Search posts containing the query string with optional date range filtering
         """
         if not self._check_rate_limit():
-            raise Exception("rate limit exceeded")
+            raise Exception("Rate limit exceeded")
+        
         self._simulate_delay()
         if self._simulate_error():
-            raise Exception("failed to search posts")
+            raise Exception("Search operation failed")
+
         query = query.lower()
         results = []
+
         for post in self._posts.values():
-            if query in post.get('content', '').lower():
+            if query in post['content'].lower():
                 if start_date and post['timestamp'] < start_date:
                     continue
                 if end_date and post['timestamp'] > end_date:
                     continue
-                results.append(post.copy())
+                results.append(post)
+
         return results
 
-    def request_data_removal(self, data_id: str, removal_type: str) -> Dict[str, Any]:
-        """simulate a data removal request. doesn't actually delete anything, but pretends to"""
+    def request_data_removal(self, data_id: str, 
+                           removal_type: str) -> Dict[str, Any]:
+        """
+        Simulate a request to remove specific data
+        Returns status of the removal request
+        """
         if not self._check_rate_limit():
-            raise Exception("rate limit exceeded")
+            raise Exception("Rate limit exceeded")
+        
         self._simulate_delay()
         if self._simulate_error():
-            raise Exception("removal request failed")
+            raise Exception("Removal request failed")
+
+        # Simulate various removal outcomes
+        success_rate = 0.8  # 80% success rate
+        if random.random() < success_rate:
+            status = "approved"
+            processing_time = random.randint(1, 7)  # Days to process
+        else:
+            status = random.choice(["denied", "pending_verification"])
+            processing_time = random.randint(7, 30)
+
         return {
-            'request_id': f"removal-{data_id}-{random.randint(1000,9999)}",
-            'status': 'pending',
-            'type': removal_type,
+            'request_id': f"rem_{random.randint(10000, 99999)}",
+            'data_id': data_id,
+            'status': status,
+            'estimated_processing_time': processing_time,
             'timestamp': datetime.now().isoformat()
         }
 
     def get_removal_request_status(self, request_id: str) -> Dict[str, Any]:
-        """check the status of a removal request. always returns 'pending' for now"""
+        """Get the current status of a removal request"""
         if not self._check_rate_limit():
-            raise Exception("rate limit exceeded")
+            raise Exception("Rate limit exceeded")
+        
         self._simulate_delay()
         if self._simulate_error():
-            raise Exception("failed to check removal status")
+            raise Exception("Failed to retrieve status")
+
+        # Simulate status check
         return {
             'request_id': request_id,
-            'status': 'pending',
-            'timestamp': datetime.now().isoformat()
+            'current_status': random.choice([
+                "in_progress", "completed", "verification_needed", "failed"
+            ]),
+            'last_updated': datetime.now().isoformat()
         }
 
 def main():

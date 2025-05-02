@@ -1,138 +1,129 @@
-# simulated personal data discovery & removal assistant
+# Simulated Personal Data Discovery & Removal Assistant
 
-this project is a master's-level simulation of a digital ecosystem, designed to explore how intelligent agents can discover, analyze, and recommend actions for personal data found in synthetic user profiles, posts, and articles. the system is modular, extensible, and built for robust experimentation and evaluation.
+A robust multi-agent system for discovering, analyzing, and recommending actions on personal data in a simulated digital ecosystem. Developed as a Master's project for Designing Intelligent Agents.
 
----
+## Project Overview
 
-## overview
+This project simulates a digital environment with synthetic user profiles, posts, and articles. Four specialized agents work together to:
+- Discover digital traces of personal data
+- Analyze and classify sensitive information using NLP
+- Evaluate risk based on content features
+- Recommend actions for data removal or protection
 
-the system simulates a digital world with synthetic user data and four main agents:
-- web scraper agent: finds personal data in text using pattern matching.
-- data analyzer agent: classifies and analyzes the sensitivity and context of discovered data.
-- risk evaluator agent: assesses the risk associated with each data item using configurable criteria.
-- recommendation agent: suggests actions for data protection and removal.
+The system supports experiments to analyze:
+- The effect of agent coordination on discovery accuracy
+- The impact of risk evaluation methods on speed and accuracy
+- The robustness of agents under varying data noise
 
-the project supports automated experiments, multiple agent coordination strategies, noise injection, and detailed performance metrics (precision, recall, f1, processing time, and more).
+## Features
 
----
+- Modular, extensible agent architecture
+- Synthetic, parameterizable digital ecosystem
+- Multiple agent coordination strategies
+- Configurable risk evaluation methods
+- Precision, recall, F1, and timing metrics
+- Automated experiment pipeline and result visualization
 
-## key features
+## Installation
 
-- synthetic data generation: realistic, diverse, and noisy user profiles and posts.
-- agent coordination: supports sequential, parallel, and hybrid agent strategies.
-- risk evaluation: flexible, multi-factor risk scoring.
-- metrics & visualization: automated experiment runs, csv export, and plotting.
-- extensible design: easy to add new agents, strategies, or data types.
-
----
-
-## project structure
-
-main directories and files:
-- `src/agents/` — agent implementations (web_scraper.py, data_analyzer.py, risk_evaluator.py, recommender.py)
-- `src/environment/` — digital ecosystem simulation and data generation
-- `src/experiments/` — experiment runner and coordinator
-- `src/utils/` — utility functions and metrics modules
-- `models/` — trained models (e.g., analyzer models)
-- `experiments/data/` — synthetic datasets
-- `experiments/results/` — experiment outputs and plots
-- `tests/` — test suite for agents and integration
-- `config.yaml` — main configuration file
-- `requirements.txt` — python dependencies
-- `README.md` — project documentation
-
----
-
-## installation
-
-1. clone the repository:
+1. Clone the repository:
    ```bash
    git clone <repository-url>
    cd <project-directory>
    ```
-
-2. set up a virtual environment:
+2. Create and activate a virtual environment:
    ```bash
    python -m venv .venv
-   # on windows:
-   .venv\Scripts\activate
-   # on unix/mac:
-   source .venv/bin/activate
+   .venv\Scripts\activate  # On Windows
+   source .venv/bin/activate  # On Unix/MacOS
    ```
-
-3. install dependencies:
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-
-4. download required nlp models:
+4. Download required models:
    ```bash
    python -m spacy download en_core_web_sm
    ```
 
----
+## Configuration
 
-## running experiments
+- All main settings are in `config.yaml` (agent parameters, risk weights, etc.)
+- Data files are in `experiments/data/`
+- Trained models are in `models/analyzer/`
 
-to run the full experiment pipeline with all strategies and noise levels:
+## Project Structure
+
+- `src/`
+  - `main.py` — Main pipeline and experiment runner
+  - `agents/`
+    - `base_agent.py` — Abstract agent class
+    - `web_scraper.py` — Web Scraper Agent
+    - `data_analyzer.py` — Data Analyzer Agent (NLP)
+    - `risk_evaluator.py` — Risk Evaluation Agent
+    - `recommender.py` — Recommendation Agent
+  - `environment/`
+    - `ecosystem.py` — Digital ecosystem and profile generator
+    - `data_generator.py` — Synthetic data generation
+  - `utils/`
+    - `common.py` — Shared utilities
+    - `metrics/`
+      - `base.py` — Basic metrics
+      - `experiment.py` — Advanced experiment metrics
+- `experiments/`
+  - `run_experiments.py` — Main experiment script
+  - `data/` — Synthetic profiles and posts
+  - `results/` — Experiment outputs (plots, CSVs)
+- `models/`
+  - `analyzer/` — Trained model files (`vectorizer.joblib`, `classifier.joblib`)
+- `requirements.txt` — Python dependencies
+- `config.yaml` — Main configuration file
+- `README.md` — Project documentation
+- `.gitignore` — Git ignore rules
+
+## Running Experiments
+
+To run the main experiment pipeline and generate results:
 ```bash
-python -m src.experiments.run_experiments
+python experiments/run_experiments.py
 ```
-results, metrics, and plots will be saved in the `experiments/results/` directory.
+This will:
+- Run experiments across multiple agent strategies, risk methods, and noise levels
+- Save results and plots to `experiments/results/`
+- Print summary tables for precision, recall, F1, and timing
+
+## Interpreting Results
+
+- **Summary tables**: Printed in the terminal for each research question
+- **Plots**: Saved in `experiments/results/` (e.g., F1 vs. noise, strategy comparisons)
+- **CSV**: All raw results in `experiment_results.csv`
+
+Key plots include:
+- Precision/Recall/F1 by coordination strategy
+- F1 vs. noise level
+- F1 by risk evaluation method
+- Processing time by risk method
+
+## Agents
+
+- **Web Scraper Agent**: Locates digital traces in the ecosystem
+- **Data Analyzer Agent**: Uses NLP to classify sensitive data
+- **Risk Evaluation Agent**: Assigns risk scores based on content features
+- **Recommendation Agent**: Recommends steps for data removal or protection
+
+## Customization & Extension
+
+- Add new agent strategies or risk configs in `experiments/run_experiments.py`
+- Modify data generation in `src/environment/ecosystem.py`
+- Update model training in `src/agents/data_analyzer.py`
+
+## Future Work
+
+- Real-time or online agent coordination
+- More advanced NLP and risk models
+- Web-based results dashboard
+- Support for additional data types and languages
 
 ---
 
-## configuration
-
-all system and agent settings are managed in `config.yaml`. you can adjust:
-- number of profiles, noise levels, and sensitive data ratio
-- agent-specific thresholds and model paths
-- experiment strategies and number of runs
-
----
-
-## testing
-
-to run all tests:
-```bash
-python -m pytest tests/
-```
-you can also run specific test files, for example:
-```bash
-python -m pytest tests/test_agents/test_data_analyzer.py
-```
-
----
-
-## metrics & evaluation
-
-the system automatically calculates and saves:
-- precision, recall, f1 for discovery, analysis, and risk evaluation
-- processing time and throughput
-- recommendation relevance and coverage
-- plots for performance trends and noise impact
-
-all results are saved as csv and png files for easy analysis.
-
----
-
-## extending the project
-
-- add new agent strategies: implement a new method in the experiment runner and add it to the config.
-- change data generation: edit `src/environment/data_generator.py` for new data types or noise models.
-- customize risk evaluation: adjust weights and thresholds in `src/agents/risk_evaluator.py` or the config.
-
----
-
-## future work
-
-- real-time or streaming data simulation
-- web-based dashboard for results
-- more advanced nlp and ml models
-- support for additional languages and data types
-
----
-
-## contact
-
-for questions or collaboration, please contact the project maintainer.
+For any questions or contributions, please open an issue or pull request.

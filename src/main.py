@@ -2,60 +2,60 @@
 Main script that coordinates all the agents and processes data.
 """
 
-import logging  # configure logging for diagnostics
-from datetime import datetime  # timestamping
-import json  # json serialization
-import os  # file system ops
-from pathlib import Path  # path handling
+import logging
+from datetime import datetime
+import json
+import os
+from pathlib import Path
 
 # Import our agents
-from agents.web_scraper import WebScraperAgent, DigitalEcosystem, ScraperConfig  # web scraper agent
-from agents.data_analyzer import DataAnalyzerAgent, AnalyzerConfig  # nlp-based data analyzer
-from agents.risk_evaluator import RiskEvaluatorAgent, RiskEvaluatorConfig  # risk scoring agent
-from agents.recommender import RecommendationAgent  # generates recommendations
-from utils.metrics import calculate_metrics, format_metrics_report  # metrics utilities
-from environment.ecosystem import DigitalEcosystem, EcosystemConfig  # environment simulation
+from agents.web_scraper import WebScraperAgent, DigitalEcosystem, ScraperConfig
+from agents.data_analyzer import DataAnalyzerAgent, AnalyzerConfig
+from agents.risk_evaluator import RiskEvaluatorAgent, RiskEvaluatorConfig
+from agents.recommender import RecommendationAgent
+from utils.metrics import calculate_metrics, format_metrics_report
+from environment.ecosystem import DigitalEcosystem, EcosystemConfig
 
 def setup_logging():
     """Setup basic logging"""
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )  # configure log format and level
+    )
 
 def process_data(text_data):
     """Run text through all our agents and collect results"""
     results = {
-        'timestamp': datetime.now().isoformat(),  # record execution time
+        'timestamp': datetime.now().isoformat(),
         'stages': {}
     }
     
     try:
         # Initialize all our agents
-        ecosystem = DigitalEcosystem(EcosystemConfig())  # setup the environment
-        scraper = WebScraperAgent(ecosystem, ScraperConfig())  # instantiate web scraper
-        analyzer = DataAnalyzerAgent(AnalyzerConfig())  # instantiate analyzer
-        risk_eval = RiskEvaluatorAgent(RiskEvaluatorConfig())  # instantiate risk evaluator
-        recommender = RecommendationAgent()  # instantiate recommender
+        ecosystem = DigitalEcosystem(EcosystemConfig())
+        scraper = WebScraperAgent(ecosystem, ScraperConfig())
+        analyzer = DataAnalyzerAgent(AnalyzerConfig())
+        risk_eval = RiskEvaluatorAgent(RiskEvaluatorConfig())
+        recommender = RecommendationAgent()
         
         # Step 1: Find personal data
         logging.info("Starting personal data discovery...")
-        discoveries = scraper.discover_profile_data("john")  # extract personal data
+        discoveries = scraper.discover_profile_data("john")
         results['stages']['discovery'] = discoveries
         
         # Step 2: Analyze what we found
         logging.info("Analyzing discovered data...")
-        analysis = [analyzer.analyze_content({'id': d.get('profile_id'), 'content': str(d)}) for d in discoveries]  # classify and tag data
+        analysis = [analyzer.analyze_content({'id': d.get('profile_id'), 'content': str(d)}) for d in discoveries]
         results['stages']['analysis'] = analysis
         
         # Step 3: Evaluate risks
         logging.info("Evaluating risks...")
-        risk_assessment = [risk_eval.evaluate_risk(a) for a in analysis]  # compute risk scores
+        risk_assessment = [risk_eval.evaluate_risk(a) for a in analysis]
         results['stages']['risk'] = risk_assessment
         
         # Step 4: Generate recommendations
         logging.info("Generating recommendations...")
-        recommendations = [recommender.generate(r) for r in risk_assessment]  # generate mitigation actions
+        recommendations = [recommender.generate(r) for r in risk_assessment]
         results['stages']['recommendations'] = recommendations
         
         return results
@@ -69,14 +69,16 @@ def process_data(text_data):
 
 def save_results(results):
     """Save processing results to a file"""
-    results_dir = Path('experiments/results')  # output directory
-    results_dir.mkdir(parents=True, exist_ok=True)  # ensure directory exists
+    # Make sure we have a results directory
+    results_dir = Path('experiments/results')
+    results_dir.mkdir(parents=True, exist_ok=True)
     
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')  # unique filename
+    # Save to a timestamped file
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     output_file = results_dir / f'scan_results_{timestamp}.json'
     
     with open(output_file, 'w') as f:
-        json.dump(results, f, indent=2)  # write results as json
+        json.dump(results, f, indent=2)
         
     return output_file
 
@@ -104,35 +106,36 @@ def print_detailed_results(results, sample_size=5):
 
 def compute_precision_recall(discoveries, ground_truths):
     """Compute precision, recall, and F1 for discovered vs. ground truth data."""
-    tp, fp, fn = 0, 0, 0  # true/false positives/negatives
+    tp, fp, fn = 0, 0, 0
     for found, truth in zip(discoveries, ground_truths):
-        found_set = set(found.get('personal_data', {}).keys())  # detected fields
-        truth_set = set(truth.get('ground_truth', []))  # reference fields
-        tp += len(found_set & truth_set)  # correct detections
-        fp += len(found_set - truth_set)  # false positives
-        fn += len(truth_set - found_set)  # false negatives
-    precision = tp / (tp + fp) if (tp + fp) else 0  # precision metric
-    recall = tp / (tp + fn) if (tp + fn) else 0  # recall metric
-    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0  # f1 score
+        found_set = set(found.get('personal_data', {}).keys())
+        truth_set = set(truth.get('ground_truth', []))
+        tp += len(found_set & truth_set)
+        fp += len(found_set - truth_set)
+        fn += len(truth_set - found_set)
+    precision = tp / (tp + fp) if (tp + fp) else 0
+    recall = tp / (tp + fn) if (tp + fn) else 0
+    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0
     return precision, recall, f1
 
 def run_pipeline(strategy='sequential', noise=0.1, risk_config=None, verbose=False):
     """Run the pipeline with specified strategy and noise, return metrics for experiments."""
-    setup_logging()  # initialize logging
-    ecosystem = DigitalEcosystem(EcosystemConfig(error_rate=noise))  # environment with noise
-    scraper = WebScraperAgent(ecosystem, ScraperConfig())  # web scraper agent
-    analyzer = DataAnalyzerAgent(AnalyzerConfig())  # analyzer agent
-    risk_eval = RiskEvaluatorAgent(risk_config or RiskEvaluatorConfig())  # risk evaluator agent
-    recommender = RecommendationAgent()  # recommendation agent
+    setup_logging()
+    # Set up environment with specified noise
+    ecosystem = DigitalEcosystem(EcosystemConfig(error_rate=noise))
+    scraper = WebScraperAgent(ecosystem, ScraperConfig())
+    analyzer = DataAnalyzerAgent(AnalyzerConfig())
+    risk_eval = RiskEvaluatorAgent(risk_config or RiskEvaluatorConfig())
+    recommender = RecommendationAgent()
 
-    # Coordination strategies
+    # Coordination strategies (simple for now)
     if strategy == 'sequential':
-        discoveries = scraper.discover_profile_data("john")  # sequential execution
+        discoveries = scraper.discover_profile_data("john")
         analysis = [analyzer.analyze_content({'id': d.get('profile_id'), 'content': str(d)}) for d in discoveries]
         risk_assessment = [risk_eval.evaluate_risk(a) for a in analysis]
         recommendations = [recommender.generate(r) for r in risk_assessment]
     elif strategy == 'parallel':
-        discoveries = scraper.discover_profile_data("john")  # parallel execution (simulated)
+        discoveries = scraper.discover_profile_data("john")
         analysis = [analyzer.analyze_content({'id': d.get('profile_id'), 'content': str(d)}) for d in discoveries]
         risk_assessment = [risk_eval.evaluate_risk(a) for a in analysis]
         recommendations = [recommender.generate(r) for r in risk_assessment]
@@ -154,12 +157,12 @@ def run_pipeline(strategy='sequential', noise=0.1, risk_config=None, verbose=Fal
             risk_assessment.append(r)
             recommendations.append(rec)
     else:
-        raise ValueError(f"Unknown strategy: {strategy}")  # invalid strategy guard
+        raise ValueError(f"Unknown strategy: {strategy}")
 
     # Metrics
-    discovered_ids = [d.get('profile_id') for d in discoveries]  # discovered profile ids
-    ground_truths = [next((p for p in ecosystem.profiles if p['id'] == str(pid)), {}) for pid in discovered_ids]  # reference profiles
-    precision, recall, f1 = compute_precision_recall(discoveries, ground_truths)  # compute metrics
+    discovered_ids = [d.get('profile_id') for d in discoveries]
+    ground_truths = [next((p for p in ecosystem.profiles if p['id'] == str(pid)), {}) for pid in discovered_ids]
+    precision, recall, f1 = compute_precision_recall(discoveries, ground_truths)
     metrics = calculate_metrics({
         'timestamp': datetime.now().isoformat(),
         'stages': {
@@ -187,7 +190,7 @@ def run_pipeline(strategy='sequential', noise=0.1, risk_config=None, verbose=Fal
 
 def main():
     """Main execution function"""
-    setup_logging()  # initialize logging
+    setup_logging()
     logging.info("Starting personal data scan...")
     
     # Sample text with personal data (you'd normally get this from files/input)
@@ -197,20 +200,22 @@ def main():
     """
     
     # Process the text
-    results = process_data(sample_text)  # run pipeline
+    results = process_data(sample_text)
     
     if 'error' in results:
         logging.error(f"Processing failed: {results['error']}")
         return
         
     # Calculate performance metrics
-    metrics = calculate_metrics(results)  # aggregate metrics
+    metrics = calculate_metrics(results)
     
     # Save everything
-    output_file = save_results(results)  # persist results
+    output_file = save_results(results)
     
     # Compute precision, recall, F1
-    ecosystem = DigitalEcosystem(EcosystemConfig())  # reload environment for ground truth
+    # Get ground truth for each discovered profile
+    ecosystem = DigitalEcosystem(EcosystemConfig())
+    # Find the profiles that were discovered (by id)
     discovered_ids = [d.get('profile_id') for d in results['stages']['discovery']]
     ground_truths = [next((p for p in ecosystem.profiles if p['id'] == str(pid)), {}) for pid in discovered_ids]
     precision, recall, f1 = compute_precision_recall(results['stages']['discovery'], ground_truths)
@@ -227,4 +232,4 @@ def main():
     print_detailed_results(results, sample_size=5)
 
 if __name__ == '__main__':
-    main()  # entry point 
+    main() 
