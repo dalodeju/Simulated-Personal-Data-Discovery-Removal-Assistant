@@ -8,8 +8,8 @@ import os
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
-from src.environment.ecosystem import DigitalEcosystem, EcosystemConfig
-from src.utils.common import setup_logging, load_config
+from environment.ecosystem import DigitalEcosystem, EcosystemConfig
+from utils.common import setup_logging, load_config
 import logging
 
 # Load configuration

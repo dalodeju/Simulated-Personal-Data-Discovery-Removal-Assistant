@@ -15,7 +15,7 @@ This project implements an intelligent agent system that can:
 
 ### Core Functionality
 - Pattern-based personal data detection using regex
-- NLP-based context analysis using spaCy and Transformers
+- NLP-based context analysis using spaCy
 - Machine learning-based sensitivity classification
 - Configurable risk assessment with multiple factors
 - Comprehensive performance metrics and visualization

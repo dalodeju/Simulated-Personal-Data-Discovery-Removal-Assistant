@@ -4,6 +4,7 @@ Keeps track of how well we're doing at finding and handling personal data.
 
 from typing import Dict, Any
 from datetime import datetime
+from collections import Counter
 
 def calculate_metrics(results):
     """Figure out how well the system is performing
@@ -37,9 +38,11 @@ def calculate_metrics(results):
         
         # How many things did we find?
         found_items = len(discoveries)
+        # Handle analysis as a list
+        analysis = results['stages']['analysis']
         risky_items = sum(
-            1 for item in results['stages']['analysis'].get('items', [])
-            if item.get('sensitivity') == 'high'
+            1 for item in analysis
+            if item.get('sensitivity', {}).get('class') == 'sensitive'
         )
         
         # Calculate performance stats
@@ -52,13 +55,40 @@ def calculate_metrics(results):
             )
         }
         
+        # Handle risk as a list
+        risks = results['stages']['risk']
+        if isinstance(risks, list):
+            risk_levels = [r.get('level', 'unknown') for r in risks]
+            # Count each risk level
+            level_counts = Counter(risk_levels)
+            # Most severe risk (critical > high > medium > low > unknown)
+            level_order = ['low', 'medium', 'high', 'critical']
+            def level_value(lvl):
+                try:
+                    return level_order.index(lvl)
+                except ValueError:
+                    return -1
+            most_severe = max(risk_levels, key=level_value, default='unknown')
+        else:
+            risk_levels = [risks.get('level', 'unknown')]
+            level_counts = Counter(risk_levels)
+            most_severe = risk_levels[0]
+        
+        # Handle recommendations as a list
+        recs = results['stages']['recommendations']
+        if isinstance(recs, list):
+            total_recs = sum(
+                len(r.get('priority_actions', [])) + len(r.get('protection_measures', []))
+                for r in recs
+            )
+        else:
+            total_recs = len(recs.get('priority_actions', [])) + len(recs.get('protection_measures', []))
+        
         # Get the final results
         metrics['summary'] = {
-            'risk_level': results['stages']['risk']['level'],
-            'recommendations_count': len(
-                results['stages']['recommendations'].get('priority_actions', []) +
-                results['stages']['recommendations'].get('protection_measures', [])
-            )
+            'risk_level': most_severe,
+            'risk_level_counts': dict(level_counts),
+            'recommendations_count': total_recs
         }
         
         return metrics
@@ -91,7 +121,8 @@ def format_metrics_report(metrics):
         f"- High Risk Ratio: {metrics['performance']['high_risk_ratio']:.2%}",
         "",
         "Summary:",
-        f"- Risk Level: {metrics['summary']['risk_level']}",
+        f"- Most Severe Risk Level: {metrics['summary']['risk_level']}",
+        f"- Risk Level Counts: {metrics['summary']['risk_level_counts']}",
         f"- Total Recommendations: {metrics['summary']['recommendations_count']}"
     ]
     

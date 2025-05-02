@@ -51,30 +51,58 @@ class DigitalEcosystem:
             raise RuntimeError("Data files not found. Run data_generator.py first.")
 
     def _initialize_test_profiles(self) -> List[Dict[str, Any]]:
-        """Initialize a set of test profiles"""
-        return [
-            {
-                'id': '1',
-                'name': 'John Doe',
-                'email': 'john.doe@example.com',
-                'phone': '123-456-7890',
-                'visibility': 'public'
-            },
-            {
-                'id': '2',
-                'name': 'Jane Smith',
-                'email': 'jane.smith@example.com',
-                'phone': '098-765-4321',
-                'visibility': 'private'
-            },
-            {
-                'id': '3',
-                'name': 'Bob Wilson',
-                'ssn': '123-45-6789',
-                'credit_card': '4111-1111-1111-1111',
-                'visibility': 'private'
+        """Generate a diverse set of 50 test profiles with varied, noisy, and obfuscated data."""
+        names = ['John Doe', 'Jane Smith', 'Bob Wilson', 'Alice Brown', 'Eve Adams', 'Tom Lee', 'Sara King', 'Mike Fox', 'Nina Ray', 'Omar Zed']
+        email_bases = ['john.doe', 'jane.smith', 'bob.wilson', 'alice.brown', 'eve.adams', 'tom.lee', 'sara.king', 'mike.fox', 'nina.ray', 'omar.zed']
+        domains = ['example.com', 'email.com', 'web.net', 'site.org', 'mail.co']
+        visibilities = ['public', 'private']
+        profiles = []
+        for i in range(50):
+            idx = random.randint(0, 9)
+            name = names[idx]
+            # Email with 80% chance, sometimes obfuscated
+            if random.random() > 0.2:
+                email = f"{email_bases[idx]}@{random.choice(domains)}"
+                if random.random() < 0.2:
+                    email = email.replace('@', ' at ')
+            else:
+                email = ''
+            # Phone with 70% chance, sometimes obfuscated
+            if random.random() > 0.3:
+                phone = f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
+                if random.random() < 0.2:
+                    phone = phone.replace('-', ' ')
+            else:
+                phone = ''
+            # SSN with 30% chance
+            ssn = f"{random.randint(100,999)}-{random.randint(10,99)}-{random.randint(1000,9999)}" if random.random() < 0.3 else ''
+            # Credit card with 20% chance
+            credit_card = f"{random.randint(4000,5999)}-{random.randint(1000,9999)}-{random.randint(1000,9999)}-{random.randint(1000,9999)}" if random.random() < 0.2 else ''
+            # Add some distractor fields
+            nickname = name.split()[0].lower() + str(random.randint(1,99)) if random.random() < 0.5 else ''
+            address = f"{random.randint(100,999)} Main St" if random.random() < 0.3 else ''
+            # Visibility
+            visibility = random.choice(visibilities)
+            # Compose profile
+            profile = {
+                'id': str(i+1),
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'ssn': ssn,
+                'credit_card': credit_card,
+                'nickname': nickname,
+                'address': address,
+                'visibility': visibility,
             }
-        ]
+            # Ground truth
+            gt = []
+            for field in ['email', 'phone', 'ssn', 'credit_card']:
+                if profile.get(field):
+                    gt.append(field)
+            profile['ground_truth'] = gt
+            profiles.append(profile)
+        return profiles
 
     def _check_rate_limit(self) -> bool:
         """Check if current request is within rate limits"""

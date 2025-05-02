@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import numpy as np
 from sklearn.preprocessing import MinMaxScaler
-from src.utils.common import setup_logging, load_config
+from utils.common import setup_logging, load_config
 
 @dataclass
 class RiskEvaluatorConfig:

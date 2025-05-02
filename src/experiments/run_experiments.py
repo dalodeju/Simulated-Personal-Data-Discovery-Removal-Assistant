@@ -5,7 +5,7 @@ from typing import Dict, List, Any
 import numpy as np
 from datetime import datetime
 
-from src.environment.simulator import DigitalEnvironment
+from environment.simulator import DigitalEnvironment
 from src.agents.web_scraper import WebScraperAgent
 from src.agents.data_analyzer import DataAnalyzerAgent
 from src.agents.risk_evaluator import RiskEvaluatorAgent

@@ -13,7 +13,7 @@ from sklearn.ensemble import RandomForestClassifier
 import joblib
 from datetime import datetime
 from pathlib import Path
-from src.utils.common import setup_logging, ensure_directory
+from utils.common import setup_logging, ensure_directory
 
 @dataclass
 class AnalyzerConfig:

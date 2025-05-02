@@ -1,5 +1,5 @@
 import unittest
-from src.environment.ecosystem import DigitalEcosystem, EcosystemConfig
+from environment.ecosystem import DigitalEcosystem, EcosystemConfig
 from src.agents.web_scraper import WebScraperAgent, ScraperConfig
 from src.agents.data_analyzer import DataAnalyzerAgent, AnalyzerConfig
 from src.agents.risk_evaluator import RiskEvaluatorAgent, RiskEvaluatorConfig

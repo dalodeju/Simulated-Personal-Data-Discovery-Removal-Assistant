@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from src.agents.web_scraper import WebScraperAgent, ScraperConfig
-from src.environment.ecosystem import DigitalEcosystem
+from environment.ecosystem import DigitalEcosystem
 
 class TestWebScraperAgent(unittest.TestCase):
     """Test cases for WebScraperAgent functionality."""
