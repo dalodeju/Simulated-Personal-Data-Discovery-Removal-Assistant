@@ -1,0 +1,244 @@
+strategy,noise,precision,recall,f1,processing_time,risk_level,risk_level_counts,recommendations_count,risk_method
+sequential,0.0,1.0,0.7,0.8235294117647058,0.0,low,{'low': 4},12,default
+sequential,0.0,1.0,0.7333333333333333,0.846153846153846,0.0,low,{'low': 6},18,default
+sequential,0.0,1.0,0.8333333333333334,0.9090909090909091,0.0,low,{'low': 3},9,default
+sequential,0.05,1.0,1.0,1.0,0.0,low,{'low': 5},15,default
+sequential,0.05,1.0,0.8571428571428571,0.923076923076923,0.0,low,{'low': 3},9,default
+sequential,0.05,1.0,0.6666666666666666,0.8,0.0,low,{'low': 5},15,default
+sequential,0.1,1.0,0.7692307692307693,0.8695652173913044,0.0,low,{'low': 5},15,default
+sequential,0.1,1.0,0.6666666666666666,0.8,0.0,low,{'low': 3},9,default
+sequential,0.1,1.0,0.9047619047619048,0.9500000000000001,0.0,low,{'low': 11},33,default
+sequential,0.15,1.0,0.6470588235294118,0.7857142857142858,0.0,low,{'low': 7},21,default
+sequential,0.15,1.0,0.9,0.9473684210526316,0.0,low,{'low': 4},12,default
+sequential,0.15,1.0,0.6923076923076923,0.8181818181818181,0.0,low,{'low': 6},18,default
+sequential,0.2,1.0,0.75,0.8571428571428571,0.0,low,{'low': 2},6,default
+sequential,0.2,1.0,0.8888888888888888,0.9411764705882353,0.0,low,{'low': 5},15,default
+sequential,0.2,1.0,0.6,0.7499999999999999,0.0,low,{'low': 4},12,default
+sequential,0.25,0.0,0.0,0.0,0.0,unknown,{},0,default
+sequential,0.25,1.0,1.0,1.0,0.0,low,{'low': 1},3,default
+sequential,0.25,0.0,0.0,0.0,0.000523,unknown,{},0,default
+sequential,0.3,1.0,0.6,0.7499999999999999,0.0,low,{'low': 5},15,default
+sequential,0.3,1.0,0.8333333333333334,0.9090909090909091,0.0,low,{'low': 3},9,default
+sequential,0.3,1.0,0.6,0.7499999999999999,0.0,low,{'low': 2},6,default
+sequential,0.4,0.0,0.0,0.0,0.0,unknown,{},0,default
+sequential,0.4,0.0,0.0,0.0,0.0,unknown,{},0,default
+sequential,0.4,1.0,0.8823529411764706,0.9375,0.0,low,{'low': 8},24,default
+sequential,0.5,1.0,0.8,0.888888888888889,0.0,low,{'low': 5},15,default
+sequential,0.5,1.0,1.0,1.0,0.0,low,{'low': 1},3,default
+sequential,0.5,1.0,0.8,0.888888888888889,0.0,low,{'low': 3},9,default
+sequential,0.0,1.0,0.6,0.7499999999999999,0.0,unknown,{'unknown': 2},6,exposure-heavy
+sequential,0.0,1.0,0.8181818181818182,0.9,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.0,1.0,0.8333333333333334,0.9090909090909091,0.0,unknown,{'unknown': 6},18,exposure-heavy
+sequential,0.05,1.0,0.9090909090909091,0.9523809523809523,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.05,1.0,0.8181818181818182,0.9,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.05,1.0,0.9333333333333333,0.9655172413793104,0.0,unknown,{'unknown': 7},21,exposure-heavy
+sequential,0.1,1.0,1.0,1.0,0.0,unknown,{'unknown': 2},6,exposure-heavy
+sequential,0.1,1.0,1.0,1.0,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.1,1.0,1.0,1.0,0.0,unknown,{'unknown': 6},18,exposure-heavy
+sequential,0.15,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+sequential,0.15,1.0,0.6153846153846154,0.761904761904762,0.0,unknown,{'unknown': 6},18,exposure-heavy
+sequential,0.15,1.0,0.5833333333333334,0.7368421052631579,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.2,1.0,0.9,0.9473684210526316,0.0,unknown,{'unknown': 6},18,exposure-heavy
+sequential,0.2,1.0,0.9,0.9473684210526316,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.2,1.0,1.0,1.0,0.0,unknown,{'unknown': 1},3,exposure-heavy
+sequential,0.25,1.0,0.9,0.9473684210526316,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.25,1.0,0.8888888888888888,0.9411764705882353,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.25,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+sequential,0.3,1.0,0.7142857142857143,0.8333333333333333,0.0,unknown,{'unknown': 3},9,exposure-heavy
+sequential,0.3,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+sequential,0.3,1.0,0.9,0.9473684210526316,0.0,unknown,{'unknown': 5},15,exposure-heavy
+sequential,0.4,1.0,0.7142857142857143,0.8333333333333333,0.0,unknown,{'unknown': 4},12,exposure-heavy
+sequential,0.4,1.0,0.8,0.888888888888889,0.0,unknown,{'unknown': 3},9,exposure-heavy
+sequential,0.4,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+sequential,0.5,1.0,1.0,1.0,0.0,unknown,{'unknown': 6},18,exposure-heavy
+sequential,0.5,1.0,0.7777777777777778,0.8750000000000001,0.0,unknown,{'unknown': 9},27,exposure-heavy
+sequential,0.5,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+sequential,0.0,1.0,0.6666666666666666,0.8,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+sequential,0.0,1.0,0.7857142857142857,0.88,0.0,unknown,{'unknown': 7},21,sensitivity-heavy
+sequential,0.0,1.0,1.0,1.0,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+sequential,0.05,1.0,0.7142857142857143,0.8333333333333333,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+sequential,0.05,1.0,1.0,1.0,0.0,unknown,{'unknown': 1},3,sensitivity-heavy
+sequential,0.05,1.0,1.0,1.0,0.0,unknown,{'unknown': 1},3,sensitivity-heavy
+sequential,0.1,1.0,1.0,1.0,0.0,unknown,{'unknown': 1},3,sensitivity-heavy
+sequential,0.1,1.0,0.6666666666666666,0.8,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+sequential,0.1,1.0,1.0,1.0,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+sequential,0.15,1.0,0.9,0.9473684210526316,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+sequential,0.15,1.0,0.7692307692307693,0.8695652173913044,0.0,unknown,{'unknown': 6},18,sensitivity-heavy
+sequential,0.15,1.0,0.6363636363636364,0.7777777777777778,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+sequential,0.2,1.0,0.875,0.9333333333333333,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+sequential,0.2,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+sequential,0.2,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+sequential,0.25,1.0,0.7777777777777778,0.8750000000000001,0.0,unknown,{'unknown': 7},21,sensitivity-heavy
+sequential,0.25,1.0,0.6470588235294118,0.7857142857142858,0.0,unknown,{'unknown': 7},21,sensitivity-heavy
+sequential,0.25,1.0,1.0,1.0,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+sequential,0.3,1.0,0.7777777777777778,0.8750000000000001,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+sequential,0.3,1.0,0.6666666666666666,0.8,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+sequential,0.3,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+sequential,0.4,1.0,0.7,0.8235294117647058,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+sequential,0.4,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+sequential,0.4,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+sequential,0.5,1.0,0.6666666666666666,0.8,0.001466,unknown,{'unknown': 4},12,sensitivity-heavy
+sequential,0.5,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 8},24,sensitivity-heavy
+sequential,0.5,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+parallel,0.0,1.0,0.75,0.8571428571428571,0.0,low,{'low': 3},9,default
+parallel,0.0,1.0,0.8,0.888888888888889,0.0,low,{'low': 5},15,default
+parallel,0.0,1.0,0.8333333333333334,0.9090909090909091,0.0,low,{'low': 4},12,default
+parallel,0.05,1.0,1.0,1.0,0.0,low,{'low': 3},9,default
+parallel,0.05,1.0,1.0,1.0,0.0,low,{'low': 4},12,default
+parallel,0.05,1.0,1.0,1.0,0.0,low,{'low': 4},12,default
+parallel,0.1,1.0,0.8333333333333334,0.9090909090909091,0.0,low,{'low': 3},9,default
+parallel,0.1,1.0,0.625,0.7692307692307693,0.0,low,{'low': 3},9,default
+parallel,0.1,1.0,0.8333333333333334,0.9090909090909091,0.0,low,{'low': 2},6,default
+parallel,0.15,1.0,0.6842105263157895,0.8125000000000001,0.0,low,{'low': 8},24,default
+parallel,0.15,1.0,0.8333333333333334,0.9090909090909091,0.0,low,{'low': 3},9,default
+parallel,0.15,1.0,1.0,1.0,0.0,low,{'low': 4},12,default
+parallel,0.2,0.0,0.0,0.0,0.0,unknown,{},0,default
+parallel,0.2,0.0,0.0,0.0,0.0,unknown,{},0,default
+parallel,0.2,1.0,0.7647058823529411,0.8666666666666666,0.0,low,{'low': 9},27,default
+parallel,0.25,1.0,0.625,0.7692307692307693,0.0,low,{'low': 4},12,default
+parallel,0.25,1.0,0.875,0.9333333333333333,0.0,low,{'low': 4},12,default
+parallel,0.25,1.0,0.6666666666666666,0.8,0.0,low,{'low': 2},6,default
+parallel,0.3,1.0,1.0,1.0,0.0,low,{'low': 1},3,default
+parallel,0.3,1.0,0.9,0.9473684210526316,0.0,low,{'low': 4},12,default
+parallel,0.3,1.0,0.8,0.888888888888889,0.0,low,{'low': 4},12,default
+parallel,0.4,1.0,1.0,1.0,0.0,low,{'low': 5},15,default
+parallel,0.4,0.0,0.0,0.0,0.0,unknown,{},0,default
+parallel,0.4,0.0,0.0,0.0,0.0,unknown,{},0,default
+parallel,0.5,0.0,0.0,0.0,0.0,unknown,{},0,default
+parallel,0.5,1.0,0.7857142857142857,0.88,0.0,low,{'low': 6},18,default
+parallel,0.5,1.0,0.7333333333333333,0.846153846153846,0.0,low,{'low': 6},18,default
+parallel,0.0,1.0,1.0,1.0,0.0,unknown,{'unknown': 2},6,exposure-heavy
+parallel,0.0,1.0,1.0,1.0,0.0,unknown,{'unknown': 4},12,exposure-heavy
+parallel,0.0,1.0,0.9285714285714286,0.962962962962963,0.0,unknown,{'unknown': 6},18,exposure-heavy
+parallel,0.05,1.0,0.7777777777777778,0.8750000000000001,0.0,unknown,{'unknown': 12},36,exposure-heavy
+parallel,0.05,1.0,0.9090909090909091,0.9523809523809523,0.0,unknown,{'unknown': 5},15,exposure-heavy
+parallel,0.05,1.0,0.875,0.9333333333333333,0.0,unknown,{'unknown': 3},9,exposure-heavy
+parallel,0.1,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+parallel,0.1,1.0,0.8888888888888888,0.9411764705882353,0.0,unknown,{'unknown': 6},18,exposure-heavy
+parallel,0.1,1.0,0.8461538461538461,0.9166666666666666,0.0,unknown,{'unknown': 6},18,exposure-heavy
+parallel,0.15,1.0,1.0,1.0,0.0,unknown,{'unknown': 1},3,exposure-heavy
+parallel,0.15,1.0,0.7647058823529411,0.8666666666666666,0.0,unknown,{'unknown': 7},21,exposure-heavy
+parallel,0.15,1.0,0.7272727272727273,0.8421052631578948,0.0,unknown,{'unknown': 5},15,exposure-heavy
+parallel,0.2,1.0,0.6,0.7499999999999999,0.0,unknown,{'unknown': 4},12,exposure-heavy
+parallel,0.2,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+parallel,0.2,1.0,0.875,0.9333333333333333,0.0,unknown,{'unknown': 5},15,exposure-heavy
+parallel,0.25,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 5},15,exposure-heavy
+parallel,0.25,1.0,0.8125,0.896551724137931,0.0,unknown,{'unknown': 8},24,exposure-heavy
+parallel,0.25,1.0,0.8571428571428571,0.923076923076923,0.0,unknown,{'unknown': 3},9,exposure-heavy
+parallel,0.3,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+parallel,0.3,1.0,0.6,0.7499999999999999,0.0,unknown,{'unknown': 4},12,exposure-heavy
+parallel,0.3,1.0,0.8888888888888888,0.9411764705882353,0.0,unknown,{'unknown': 5},15,exposure-heavy
+parallel,0.4,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+parallel,0.4,1.0,1.0,1.0,0.0,unknown,{'unknown': 3},9,exposure-heavy
+parallel,0.4,1.0,0.9230769230769231,0.9600000000000001,0.0,unknown,{'unknown': 6},18,exposure-heavy
+parallel,0.5,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+parallel,0.5,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+parallel,0.5,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+parallel,0.0,1.0,0.8,0.888888888888889,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+parallel,0.0,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+parallel,0.0,1.0,0.6428571428571429,0.782608695652174,0.0,unknown,{'unknown': 6},18,sensitivity-heavy
+parallel,0.05,1.0,0.6363636363636364,0.7777777777777778,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+parallel,0.05,1.0,0.875,0.9333333333333333,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+parallel,0.05,1.0,0.8333333333333334,0.9090909090909091,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+parallel,0.1,1.0,0.8333333333333334,0.9090909090909091,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+parallel,0.1,1.0,0.5714285714285714,0.7272727272727273,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+parallel,0.1,1.0,0.8571428571428571,0.923076923076923,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+parallel,0.15,1.0,0.6,0.7499999999999999,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+parallel,0.15,1.0,0.6,0.7499999999999999,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+parallel,0.15,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+parallel,0.2,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+parallel,0.2,1.0,0.9,0.9473684210526316,0.0,unknown,{'unknown': 6},18,sensitivity-heavy
+parallel,0.2,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+parallel,0.25,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+parallel,0.25,1.0,0.875,0.9333333333333333,0.0,unknown,{'unknown': 8},24,sensitivity-heavy
+parallel,0.25,1.0,1.0,1.0,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+parallel,0.3,1.0,1.0,1.0,0.0,unknown,{'unknown': 2},6,sensitivity-heavy
+parallel,0.3,1.0,0.8333333333333334,0.9090909090909091,0.0,unknown,{'unknown': 2},6,sensitivity-heavy
+parallel,0.3,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+parallel,0.4,1.0,0.8,0.888888888888889,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+parallel,0.4,1.0,0.8571428571428571,0.923076923076923,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+parallel,0.4,1.0,0.8666666666666667,0.9285714285714286,0.0,unknown,{'unknown': 6},18,sensitivity-heavy
+parallel,0.5,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+parallel,0.5,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+parallel,0.5,1.0,0.8,0.888888888888889,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+hybrid,0.0,1.0,0.7777777777777778,0.8750000000000001,0.0,low,{'low': 4},12,default
+hybrid,0.0,1.0,1.0,1.0,0.0,low,{'low': 4},12,default
+hybrid,0.0,0.0,0.0,0.0,0.0,unknown,{},0,default
+hybrid,0.05,0.0,0.0,0.0,0.0,unknown,{},0,default
+hybrid,0.05,1.0,1.0,1.0,0.0,low,{'low': 2},6,default
+hybrid,0.05,1.0,0.7777777777777778,0.8750000000000001,0.0,low,{'low': 5},15,default
+hybrid,0.1,1.0,0.9411764705882353,0.9696969696969697,0.0,low,{'low': 7},21,default
+hybrid,0.1,1.0,0.6,0.7499999999999999,0.0,low,{'low': 2},6,default
+hybrid,0.1,1.0,0.7647058823529411,0.8666666666666666,0.0,low,{'low': 7},21,default
+hybrid,0.15,1.0,0.75,0.8571428571428571,0.0,low,{'low': 2},6,default
+hybrid,0.15,1.0,1.0,1.0,0.0,low,{'low': 5},15,default
+hybrid,0.15,1.0,0.8333333333333334,0.9090909090909091,0.0,low,{'low': 3},9,default
+hybrid,0.2,1.0,1.0,1.0,0.001508,low,{'low': 3},9,default
+hybrid,0.2,1.0,0.8,0.888888888888889,0.0,low,{'low': 2},6,default
+hybrid,0.2,1.0,0.7142857142857143,0.8333333333333333,0.0,low,{'low': 4},12,default
+hybrid,0.25,1.0,0.8,0.888888888888889,0.0,low,{'low': 5},15,default
+hybrid,0.25,0.0,0.0,0.0,0.0,unknown,{},0,default
+hybrid,0.25,1.0,0.9230769230769231,0.9600000000000001,0.0,low,{'low': 5},15,default
+hybrid,0.3,1.0,0.8181818181818182,0.9,0.0,low,{'low': 5},15,default
+hybrid,0.3,0.0,0.0,0.0,0.0,unknown,{},0,default
+hybrid,0.3,1.0,0.9090909090909091,0.9523809523809523,0.0,low,{'low': 6},18,default
+hybrid,0.4,1.0,1.0,1.0,0.0,low,{'low': 7},21,default
+hybrid,0.4,0.0,0.0,0.0,0.0,unknown,{},0,default
+hybrid,0.4,1.0,0.9375,0.967741935483871,0.0,low,{'low': 8},24,default
+hybrid,0.5,1.0,0.6,0.7499999999999999,0.0,low,{'low': 4},12,default
+hybrid,0.5,0.0,0.0,0.0,0.0,unknown,{},0,default
+hybrid,0.5,1.0,0.9166666666666666,0.9565217391304348,0.0,low,{'low': 6},18,default
+hybrid,0.0,1.0,0.8571428571428571,0.923076923076923,0.0,unknown,{'unknown': 6},18,exposure-heavy
+hybrid,0.0,1.0,0.7058823529411765,0.8275862068965517,0.0,unknown,{'unknown': 7},21,exposure-heavy
+hybrid,0.0,1.0,0.6666666666666666,0.8,0.0,unknown,{'unknown': 3},9,exposure-heavy
+hybrid,0.05,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+hybrid,0.05,1.0,0.8571428571428571,0.923076923076923,0.0,unknown,{'unknown': 4},12,exposure-heavy
+hybrid,0.05,1.0,0.6666666666666666,0.8,0.0,unknown,{'unknown': 5},15,exposure-heavy
+hybrid,0.1,1.0,0.9166666666666666,0.9565217391304348,0.0,unknown,{'unknown': 5},15,exposure-heavy
+hybrid,0.1,1.0,0.8,0.888888888888889,0.0,unknown,{'unknown': 2},6,exposure-heavy
+hybrid,0.1,1.0,0.6666666666666666,0.8,0.0,unknown,{'unknown': 1},3,exposure-heavy
+hybrid,0.15,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+hybrid,0.15,1.0,0.8888888888888888,0.9411764705882353,0.0,unknown,{'unknown': 8},24,exposure-heavy
+hybrid,0.15,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 4},12,exposure-heavy
+hybrid,0.2,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+hybrid,0.2,1.0,0.85,0.9189189189189189,0.0,unknown,{'unknown': 11},33,exposure-heavy
+hybrid,0.2,1.0,0.9090909090909091,0.9523809523809523,0.0,unknown,{'unknown': 6},18,exposure-heavy
+hybrid,0.25,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+hybrid,0.25,1.0,1.0,1.0,0.0,unknown,{'unknown': 6},18,exposure-heavy
+hybrid,0.25,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+hybrid,0.3,1.0,0.8571428571428571,0.923076923076923,0.0,unknown,{'unknown': 4},12,exposure-heavy
+hybrid,0.3,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 4},12,exposure-heavy
+hybrid,0.3,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 3},9,exposure-heavy
+hybrid,0.4,1.0,0.6666666666666666,0.8,0.0,unknown,{'unknown': 5},15,exposure-heavy
+hybrid,0.4,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+hybrid,0.4,1.0,0.8,0.888888888888889,0.0,unknown,{'unknown': 3},9,exposure-heavy
+hybrid,0.5,1.0,0.8888888888888888,0.9411764705882353,0.0,unknown,{'unknown': 4},12,exposure-heavy
+hybrid,0.5,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+hybrid,0.5,0.0,0.0,0.0,0.0,unknown,{},0,exposure-heavy
+hybrid,0.0,1.0,0.9444444444444444,0.9714285714285714,0.0,unknown,{'unknown': 7},21,sensitivity-heavy
+hybrid,0.0,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+hybrid,0.0,1.0,0.7272727272727273,0.8421052631578948,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+hybrid,0.05,1.0,1.0,1.0,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+hybrid,0.05,1.0,0.8,0.888888888888889,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+hybrid,0.05,1.0,0.38461538461538464,0.5555555555555556,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+hybrid,0.1,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+hybrid,0.1,1.0,0.5714285714285714,0.7272727272727273,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+hybrid,0.1,1.0,0.8333333333333334,0.9090909090909091,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+hybrid,0.15,1.0,1.0,1.0,0.0,unknown,{'unknown': 2},6,sensitivity-heavy
+hybrid,0.15,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 6},18,sensitivity-heavy
+hybrid,0.15,1.0,1.0,1.0,0.0,unknown,{'unknown': 2},6,sensitivity-heavy
+hybrid,0.2,1.0,1.0,1.0,0.0,unknown,{'unknown': 4},12,sensitivity-heavy
+hybrid,0.2,1.0,0.8571428571428571,0.923076923076923,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+hybrid,0.2,1.0,0.8333333333333334,0.9090909090909091,0.0,unknown,{'unknown': 5},15,sensitivity-heavy
+hybrid,0.25,1.0,0.8333333333333334,0.9090909090909091,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+hybrid,0.25,1.0,0.5,0.6666666666666666,0.0,unknown,{'unknown': 1},3,sensitivity-heavy
+hybrid,0.25,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+hybrid,0.3,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+hybrid,0.3,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+hybrid,0.3,1.0,0.75,0.8571428571428571,0.0,unknown,{'unknown': 3},9,sensitivity-heavy
+hybrid,0.4,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+hybrid,0.4,1.0,0.9,0.9473684210526316,0.0,unknown,{'unknown': 6},18,sensitivity-heavy
+hybrid,0.4,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+hybrid,0.5,1.0,1.0,1.0,0.0,unknown,{'unknown': 2},6,sensitivity-heavy
+hybrid,0.5,0.0,0.0,0.0,0.0,unknown,{},0,sensitivity-heavy
+hybrid,0.5,1.0,0.9285714285714286,0.962962962962963,0.0,unknown,{'unknown': 7},21,sensitivity-heavy
