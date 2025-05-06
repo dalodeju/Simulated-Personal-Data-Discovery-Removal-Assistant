@@ -28,8 +28,8 @@ The system supports experiments to analyze:
 
 1. Clone the repository:
    ```bash
-   git clone <dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant>
-   cd <dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant>
+   git clone dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant
+   cd dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant
    ```
 2. Create and activate a virtual environment:
    ```bash
@@ -54,31 +54,31 @@ The system supports experiments to analyze:
 ## Project Structure
 
 - `src/`
-  - `main.py` — Main pipeline and experiment runner
+  - `main.py` - Main pipeline and experiment runner
   - `agents/`
-    - `base_agent.py` — Abstract agent class
-    - `web_scraper.py` — Web Scraper Agent
-    - `data_analyzer.py` — Data Analyzer Agent (NLP)
-    - `risk_evaluator.py` — Risk Evaluation Agent
-    - `recommender.py` — Recommendation Agent
+    - `base_agent.py` - Abstract agent class
+    - `web_scraper.py` - Web Scraper Agent
+    - `data_analyzer.py` - Data Analyzer Agent (NLP)
+    - `risk_evaluator.py` - Risk Evaluation Agent
+    - `recommender.py` - Recommendation Agent
   - `environment/`
-    - `ecosystem.py` — Digital ecosystem and profile generator
-    - `data_generator.py` — Synthetic data generation
+    - `ecosystem.py` - Digital ecosystem and profile generator
+    - `data_generator.py` - Synthetic data generation
   - `utils/`
-    - `common.py` — Shared utilities
+    - `common.py` - Shared utilities
     - `metrics/`
-      - `base.py` — Basic metrics
-      - `experiment.py` — Advanced experiment metrics
+      - `base.py` - Basic metrics
+      - `experiment.py` - Advanced experiment metrics
 - `experiments/`
-  - `run_experiments.py` — Main experiment script
-  - `data/` — Synthetic profiles and posts
-  - `results/` — Experiment outputs (plots, CSVs)
+  - `run_experiments.py` - Main experiment script
+  - `data/` - Synthetic profiles and posts
+  - `results/` - Experiment outputs (plots, CSVs)
 - `models/`
-  - `analyzer/` — Trained model files (`vectorizer.joblib`, `classifier.joblib`)
-- `requirements.txt` — Python dependencies
-- `config.yaml` — Main configuration file
-- `README.md` — Project documentation
-- `.gitignore` — Git ignore rules
+  - `analyzer/` - Trained model files (`vectorizer.joblib`, `classifier.joblib`)
+- `requirements.txt` - Python dependencies
+- `config.yaml` - Main configuration file
+- `README.md` - Project documentation
+- `.gitignore` - Git ignore rules
 
 ## Running Experiments
 
