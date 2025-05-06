@@ -1,5 +1,4 @@
 """Personal Data Discovery & Removal Assistant
-Main script that coordinates all the agents and processes data.
 """
 
 import logging
@@ -121,11 +120,17 @@ def compute_precision_recall(discoveries, ground_truths):
 def run_pipeline(strategy='sequential', noise=0.1, risk_config=None, verbose=False):
     """Run the pipeline with specified strategy and noise, return metrics for experiments."""
     setup_logging()
+    # Start timing the full experiment
+    pipeline_start = datetime.now()
     # Set up environment with specified noise
     ecosystem = DigitalEcosystem(EcosystemConfig(error_rate=noise))
     scraper = WebScraperAgent(ecosystem, ScraperConfig())
     analyzer = DataAnalyzerAgent(AnalyzerConfig())
-    risk_eval = RiskEvaluatorAgent(risk_config or RiskEvaluatorConfig())
+    # Fix: Convert dict risk_config to RiskEvaluatorConfig if needed
+    if isinstance(risk_config, dict):
+        risk_eval = RiskEvaluatorAgent(RiskEvaluatorConfig(**risk_config))
+    else:
+        risk_eval = RiskEvaluatorAgent(risk_config or RiskEvaluatorConfig())
     recommender = RecommendationAgent()
 
     # Coordination strategies (simple for now)
@@ -163,8 +168,9 @@ def run_pipeline(strategy='sequential', noise=0.1, risk_config=None, verbose=Fal
     discovered_ids = [d.get('profile_id') for d in discoveries]
     ground_truths = [next((p for p in ecosystem.profiles if p['id'] == str(pid)), {}) for pid in discovered_ids]
     precision, recall, f1 = compute_precision_recall(discoveries, ground_truths)
+    # Use the actual pipeline_start for timing
     metrics = calculate_metrics({
-        'timestamp': datetime.now().isoformat(),
+        'timestamp': pipeline_start.isoformat(),
         'stages': {
             'discovery': discoveries,
             'analysis': analysis,
