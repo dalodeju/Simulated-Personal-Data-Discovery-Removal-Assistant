@@ -46,7 +46,7 @@ for strategy in strategies:
 df = pd.DataFrame(results)
 df.to_csv('experiments/results/experiment_results.csv', index=False)
 
-# 1. Agent Coordination vs. Accuracy
+# 1. Coordination vs. Accuracy
 print("\n=== Agent Coordination vs. Data Discovery Accuracy ===")
 coord_summary = df.groupby(['strategy'])[['precision', 'recall', 'f1']].mean().reset_index()
 print(coord_summary)
@@ -93,28 +93,6 @@ plt.ylabel('F1 Score')
 plt.xlabel('Noise Level')
 plt.tight_layout()
 plt.savefig('experiments/results/f1_vs_noise.png')
-plt.close()
-
-# Additional: F1 by Noise and Strategy
-plt.figure(figsize=(8, 5))
-sns.lineplot(data=df, x='noise', y='f1', hue='strategy', marker='o')
-plt.title('F1 Score by Noise Level and Strategy')
-plt.ylabel('F1 Score')
-plt.xlabel('Noise Level')
-plt.legend(title='Strategy')
-plt.tight_layout()
-plt.savefig('experiments/results/f1_by_noise_strategy.png')
-plt.close()
-
-# Additional: F1 by Noise and Risk Method
-plt.figure(figsize=(8, 5))
-sns.lineplot(data=df, x='noise', y='f1', hue='risk_method', marker='o')
-plt.title('F1 Score by Noise Level and Risk Method')
-plt.ylabel('F1 Score')
-plt.xlabel('Noise Level')
-plt.legend(title='Risk Method')
-plt.tight_layout()
-plt.savefig('experiments/results/f1_by_noise_risk_method.png')
 plt.close()
 
 print("\nAll results and plots saved to experiments/results/") 
