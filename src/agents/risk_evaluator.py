@@ -1,6 +1,5 @@
 """
 Risk Evaluation Agent for assessing the risk level of discovered personal data.
-Uses multiple factors to calculate comprehensive risk scores.
 """
 
 import re
@@ -21,7 +20,7 @@ class RiskEvaluatorConfig:
     batch_size: int = 32
     
     def __post_init__(self):
-        # Default risk thresholds if none provided
+        # default risk thresholds if none provided
         if self.risk_thresholds is None:
             self.risk_thresholds = {
                 'low': 0.3,
@@ -30,7 +29,7 @@ class RiskEvaluatorConfig:
                 'critical': 0.9
             }
         
-        # Default feature weights if none provided
+        # default feature weights if none provided
         if self.weights is None:
             self.weights = {
                 'sensitivity': 0.35,
@@ -51,7 +50,7 @@ class RiskEvaluatorAgent:
         self.logger = setup_logging(__name__)
         self.scaler = MinMaxScaler()
         
-        # Risk factors and their relative weights within categories
+        # risk factors and their relative weights within categories
         self.sensitivity_factors = {
             'financial': 0.9,
             'medical': 0.85,
@@ -97,13 +96,13 @@ class RiskEvaluatorAgent:
                                 platform_reach: int,
                                 share_count: int) -> float:
         """Calculate exposure score based on visibility and reach"""
-        # Base exposure from visibility level
+        # base exposure from visibility level
         base_exposure = self.exposure_factors.get(visibility.lower(), 0.5)
         
-        # Adjust for platform reach (normalized to 0-1 range)
+        # adjust for platform reach (normalized to 0-1 range)
         reach_factor = min(platform_reach / 1000000, 1.0)
         
-        # Adjust for sharing activity (normalized to 0-1 range)
+        # adjust for sharing activity (normalized to 0-1 range)
         share_factor = min(share_count / 100, 1.0)
         
         return base_exposure * (0.6 + 0.2 * reach_factor + 0.2 * share_factor)
@@ -111,17 +110,17 @@ class RiskEvaluatorAgent:
     def _calculate_freshness_score(self, timestamp: Optional[str]) -> float:
         """Calculate freshness score based on data age"""
         if not timestamp:
-            return 0.5  # Default score if no timestamp
+            return 0.5  # default score if no timestamp
             
         try:
             data_time = datetime.fromisoformat(timestamp)
             age_days = (datetime.now() - data_time).days
             
-            # Exponential decay based on age
+            # exponential decay based on age
             return np.exp(-self.config.time_decay_factor * age_days)
         except (ValueError, TypeError) as e:
             self.logger.warning(f"Invalid timestamp format: {e}")
-            return 0.5  # Default score if timestamp is invalid
+            return 0.5  # default score if timestamp is invalid
 
     def _calculate_combination_score(self, 
                                   data_categories: List[str]) -> float:
@@ -132,8 +131,8 @@ class RiskEvaluatorAgent:
         combination_risk = 0.0
         for cat1 in data_categories:
             for cat2 in data_categories:
-                if cat1 < cat2:  # Avoid counting pairs twice
-                    # Check both orderings of the pair
+                if cat1 < cat2:  # avoid counting pairs twice
+                    # ccheck both orderings of the pair
                     penalty = max(
                         self.combination_penalties.get((cat1, cat2), 0.0),
                         self.combination_penalties.get((cat2, cat1), 0.0)
@@ -149,19 +148,19 @@ class RiskEvaluatorAgent:
         """Calculate context-based risk score"""
         base_score = 0.0
         
-        # Adjust for sentiment
+        # adjust for sentiment
         if isinstance(sentiment, str) and sentiment.lower() == 'negative':
             base_score += 0.3
         elif isinstance(sentiment, dict):
-            # Handle sentiment analysis results
+            # handle sentiment analysis results
             if sentiment.get('label', '').lower() == 'negative':
                 base_score += 0.3 * sentiment.get('score', 1.0)
         
-        # Adjust for public visibility
+        # adjust for public visibility
         if is_public:
             base_score += 0.4
             
-        # Adjust for presence of PII
+        # adjust for presence of PII
         if has_pii:
             base_score += 0.3
             
@@ -176,7 +175,7 @@ class RiskEvaluatorAgent:
             return self._create_error_response("Invalid input: data_item must be a dictionary")
             
         try:
-            # Extract relevant features with proper type checking
+            # extract relevant features with proper type checking
             categories = data_item.get('categories', [])
             if not isinstance(categories, list):
                 categories = []
@@ -193,7 +192,7 @@ class RiskEvaluatorAgent:
             is_public = visibility == 'public'
             has_pii = any(cat in self.sensitivity_factors for cat in categories)
             
-            # Calculate component scores
+            # calculate component scoress
             sensitivity_score = self._calculate_sensitivity_score(
                 categories, confidence_scores
             )
@@ -206,7 +205,7 @@ class RiskEvaluatorAgent:
                 sentiment, is_public, has_pii
             )
             
-            # Calculate weighted risk score
+            # calculate weighted risk score
             risk_score = (
                 self.config.weights['sensitivity'] * sensitivity_score +
                 self.config.weights['exposure'] * exposure_score +
@@ -215,7 +214,7 @@ class RiskEvaluatorAgent:
                 self.config.weights['context'] * context_score
             )
             
-            # Determine risk level
+            # determine risk level
             risk_level = 'low'
             for level, threshold in sorted(
                 self.config.risk_thresholds.items(),
@@ -224,7 +223,7 @@ class RiskEvaluatorAgent:
                 if risk_score >= threshold:
                     risk_level = level
             
-            # Build recommendations based on findings
+            # build recommendations based on findings
             recommendations = self._generate_recommendations(
                 risk_level, categories, visibility, has_pii
             )
@@ -232,7 +231,7 @@ class RiskEvaluatorAgent:
             return {
                 'risk_score': risk_score,
                 'risk_level': risk_level,
-                'level': risk_level,  # For backward compatibility
+                'level': risk_level,  # for backward compatibility
                 'component_scores': {
                     'sensitivity': sensitivity_score,
                     'exposure': exposure_score,
@@ -282,7 +281,7 @@ class RiskEvaluatorAgent:
         """Generate specific recommendations based on risk assessment"""
         recommendations = []
         
-        # Risk level based recommendations
+        # risk level based recommendations
         if risk_level in ['high', 'critical']:
             recommendations.append("Immediate action required to address security concerns")
             if has_pii:
@@ -290,7 +289,7 @@ class RiskEvaluatorAgent:
             if visibility == 'public':
                 recommendations.append("Review and restrict visibility settings")
                 
-        # Category specific recommendations
+        # category specific recommendations
         category_recommendations = {
             'financial': [
                 "Remove or mask financial information",
@@ -318,7 +317,7 @@ class RiskEvaluatorAgent:
             if category in category_recommendations:
                 recommendations.extend(category_recommendations[category])
                 
-        return list(set(recommendations))  # Remove duplicates
+        return list(set(recommendations))  # remove duplicates
 
     def batch_evaluate(self, 
                       data_items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
@@ -346,14 +345,14 @@ class RiskEvaluatorAgent:
 
 def main():
     """Main function to test the Risk Evaluator Agent"""
-    # Setup logging
+    # setup logging
     logging.basicConfig(level=logging.INFO)
     
-    # Initialize agent
+    # initialize agent
     config = RiskEvaluatorConfig()
     agent = RiskEvaluatorAgent(config)
     
-    # Test evaluation
+    # test evaluation
     test_item = {
         'id': '123',
         'categories': ['financial', 'personal_id'],
