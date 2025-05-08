@@ -80,7 +80,6 @@ This will:
 - `src/`
   - `main.py` - Main pipeline
   - `agents/`
-    - `base_agent.py` - Base Agent Class
     - `web_scraper.py` - Web Scraper Agent
     - `data_analyzer.py` - Data Analyzer Agent (NLP)
     - `risk_evaluator.py` - Risk Evaluation Agent
