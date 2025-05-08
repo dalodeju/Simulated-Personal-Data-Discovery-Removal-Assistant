@@ -23,8 +23,8 @@ This project simulates a digital environment with synthetic user profiles, posts
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant.git
-   cd Simulated-Personal-Data-Discovery-Removal-Assistant
+   git clone https://github.com/dalodeju/simulated-personal-data-discovery-removal-assistant.git
+   cd simulated-personal-data-discovery-removal-assistant
    ```
 2. Create and activate a virtual environment:
    ```bash
