@@ -1,5 +1,5 @@
 """
-Data Generator for creating fake personal data in our simulated environment.
+Data Generator for creating synthetic personal data in our simulated environment.
 """
 
 import random
@@ -11,16 +11,19 @@ import faker
 import numpy as np
 from dataclasses import dataclass
 
+random.seed(42)
+np.random.seed(42)
+
 @dataclass
 class DataConfig:
-    """config for data generation"""
-    num_profiles: int = 100
+    """Configuration for data generation"""
+    num_profiles: int = 100 # 100 profiles by default
     num_posts_per_profile: tuple = (5, 20)  # (min, max)
     noise_level: float = 0.1  # 0.0 to 1.0
-    sensitive_data_ratio: float = 0.3  # ratio of content containing sensitive data
+    sensitive_data_ratio: float = 0.3  # Ratio of content containing sensitive data
 
 class DataGenerator:
-    """generates fake personal data for the simulated environment"""
+    """Generates synthetic personal data for the simulated environment"""
     
     def __init__(self, config: DataConfig):
         self.config = config
@@ -28,7 +31,7 @@ class DataGenerator:
         self.sensitive_patterns = [
             r'\b\d{3}-\d{2}-\d{4}\b',  # SSN
             r'\b\d{16}\b',  # credit card
-            r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',  # email
+            r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',  # Email
             r'\b\d{10}\b',  # phone number
         ]
 
@@ -54,7 +57,7 @@ class DataGenerator:
         return profile
 
     def generate_post(self, profile_id: str, is_sensitive: bool = False) -> Dict[str, Any]:
-        """generate a post, sometimes containing sensitive information"""
+        """Generate a single post, optionally containing sensitive information"""
         post = {
             'id': self.fake.uuid4(),
             'profile_id': profile_id,
@@ -88,7 +91,7 @@ class DataGenerator:
     def _add_noise(self, text: str) -> str:
         """Add random noise to text based on noise level"""
         if random.random() < self.config.noise_level:
-            # Add typos, extra spaces, or special characters
+            # add typos, extra spaces, or special characters
             modifications = [
                 lambda t: t.replace(' ', '  '),
                 lambda t: t.replace('a', '@'),
