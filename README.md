@@ -1,6 +1,6 @@
 # Simulated Personal Data Discovery & Removal Assistant
 
-This project builds and evaluates a multi‑agent system for finding, analyzing, and recommending actions on personal data in a controlled, simulated digital environment. Data privacy is a growing concern: companies, regulators, and individuals need tools to locate exposed personal information, assess its risk, and decide how to mitigate exposure. A multi‑agent approach lets specialized components focus on discovery, classification, risk scoring, and recommendations, then coordinate to produce a unified workflow.
+This project builds and evaluates a multi‑agent system for finding, analyzing, and recommending actions on personal data in a controlled, simulated digital environment. Data privacy is a growing concern. Companies, regulators, and individuals need tools to locate exposed personal information, assess its risk, and decide how to deal with that exposure respectively. A multi‑agent approach allows specialized components to focus on discovery, classification and risk scoring to generate recommendations for the next course of action.
 
 ## Project Overview
 
@@ -38,6 +38,22 @@ This project simulates a digital environment with synthetic user profiles, posts
 - Data files are in `experiments/data/`
 - Trained models are in `models/analyzer/`
 
+## Running the Main Pipeline
+To run the full agent pipeline on a sample input and see how all agents work together, use:
+```bash
+python src/main.py
+```
+This will:
+- Run the pipeline end-to-end (discovery, analysis, risk evaluation, recommendations)
+- Use a sample text containing personal data
+- Print a summary of results, risk levels, recommendations, and performance metrics to the terminal
+- Save a detailed JSON output to `experiments/results/` (e.g., `scan_results_YYYYMMDD_HHMMSS.json`)
+
+### Outputs
+
+- **Terminal**: Summary of discovered data, risk levels, recommendations is printed
+- **JSON**: `scan_results_YYYYMMDD_HHMMSS.json` is saved in `experiments/results/`
+
 ## Running Experiments
 
 To run the main experiment pipeline and generate results:
@@ -49,16 +65,16 @@ This will:
 - Save results and plots to `experiments/results/`
 - Print summary tables for precision, recall, F1, and total processing time
 
-## Results
+### Outputs
 
-- **Summary tables**: Printed in the terminal for each research question
+- **Terminal**: Resulting tables for each metric is printed
 - **CSV**: All raw results in `experiment_results.csv`
 - **Figures**: Saved in `experiments/results/`: 
   - Precision/Recall/F1 vs. Coordination Strategy
   - Precision/Recall/F1 vs. Risk Evaluation Method
   - F1 vs. Noise Level
   - Processing Time vs. Risk Method
- 
+
 ## Project Structure
 
 - `src/`
