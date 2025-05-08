@@ -1,5 +1,7 @@
 import sys
 import os
+import random
+import numpy as np
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
 from main import run_pipeline
 import pandas as pd
@@ -104,4 +106,7 @@ plt.tight_layout()
 plt.savefig('experiments/results/risk_method_vs_time.png')
 plt.close()
 
-print("\nAll results and plots saved to experiments/results/") 
+print("\nAll results and plots saved to experiments/results/")
+
+random.seed(42)
+np.random.seed(42) 
