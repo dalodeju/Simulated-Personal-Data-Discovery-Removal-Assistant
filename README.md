@@ -38,6 +38,27 @@ This project simulates a digital environment with synthetic user profiles, posts
 - Data files are in `experiments/data/`
 - Trained models are in `models/analyzer/`
 
+## Running Experiments
+
+To run the main experiment pipeline and generate results:
+```bash
+python experiments/run_experiments.py
+```
+This will:
+- Run experiments across multiple agent strategies, risk methods, and noise levels
+- Save results and plots to `experiments/results/`
+- Print summary tables for precision, recall, F1, and total processing time
+
+## Results
+
+- **Summary tables**: Printed in the terminal for each research question
+- **CSV**: All raw results in `experiment_results.csv`
+- **Figures**: Saved in `experiments/results/`: 
+  - Precision/Recall/F1 vs. Coordination Strategy
+  - Precision/Recall/F1 vs. Risk Evaluation Method
+  - F1 vs. Noise Level
+  - Processing Time vs. Risk Method
+ 
 ## Project Structure
 
 - `src/`
@@ -66,27 +87,6 @@ This project simulates a digital environment with synthetic user profiles, posts
 - `config.yaml` - Main config file
 - `README.md` - Project docs
 - `.gitignore` - Git ignore
-
-## Running Experiments
-
-To run the main experiment pipeline and generate results:
-```bash
-python experiments/run_experiments.py
-```
-This will:
-- Run experiments across multiple agent strategies, risk methods, and noise levels
-- Save results and plots to `experiments/results/`
-- Print summary tables for precision, recall, F1, and total processing time
-
-## Interpreting Results
-
-- **Summary tables**: Printed in the terminal for each research question
-- **CSV**: All raw results in `experiment_results.csv`
-- **Figures**: Saved in `experiments/results/`: 
-  - Precision/Recall/F1 vs. Coordination Strategy
-  - Precision/Recall/F1 vs. Risk Evaluation Method
-  - F1 vs. Noise Level
-  - Processing Time vs. Risk Method
 
 ## Future Work
 
