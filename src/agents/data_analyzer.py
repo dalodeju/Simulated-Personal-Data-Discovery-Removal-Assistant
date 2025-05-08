@@ -1,6 +1,6 @@
 """
 Data Analyzer Agent for classifying and understanding sensitive data.
-Uses NLP techniques to analyze and categorize personal information.
+Uses NLP  to analyze and categorize personal information.
 """
 
 from typing import List, Dict, Any, Tuple
@@ -34,9 +34,9 @@ class DataAnalyzerAgent:
     Combines rule-based and ML approaches for robust classification.
     """
     
-    # Default training data for initial model fitting
+    # default training data for initial model fitting
     DEFAULT_TRAINING_DATA = [
-        # Non-sensitive examples
+        # non-sensitive examples
         ("This is a regular public post about the weather", "not_sensitive"),
         ("Check out this awesome tutorial on Python programming", "not_sensitive"),
         ("The meeting is scheduled for next Monday at 2 PM", "not_sensitive"),
@@ -48,27 +48,27 @@ class DataAnalyzerAgent:
         ("The movie was really entertaining", "not_sensitive"),
         ("New coffee shop opened downtown", "not_sensitive"),
         
-        # Financial data examples
+        # financial data examples
         ("My bank account number is 1234567890", "sensitive"),
         ("Credit card details: 4111-1111-1111-1111", "sensitive"),
         ("The total transaction amount is $5000", "sensitive"),
         
-        # Personal identification examples
+        # personal identification examples
         ("My SSN is 123-45-6789", "sensitive"),
         ("Driver's license number: X12345678", "sensitive"),
         ("Passport number: AB123456", "sensitive"),
         
-        # Contact information examples
+        # contact information examples
         ("You can reach me at john.doe@email.com", "sensitive"),
         ("My phone number is 555-123-4567", "sensitive"),
         ("Home address: 123 Main St, Anytown, USA", "sensitive"),
         
-        # Medical information examples
+        # medical information examples
         ("Patient diagnosed with type 2 diabetes", "sensitive"),
         ("Prescription: 50mg medication twice daily", "sensitive"),
         ("Medical history includes heart surgery", "sensitive"),
         
-        # Credential examples
+        # credential examples
         ("Username: admin Password: secretpass123", "sensitive"),
         ("API key: sk_test_123456789", "sensitive"),
         ("Login credentials for the system", "sensitive")
@@ -78,7 +78,7 @@ class DataAnalyzerAgent:
         self.config = config
         self.logger = setup_logging(__name__)
         
-        # Initialize NLP components
+        # initialize NLP components
         try:
             self.nlp = spacy.load(config.spacy_model)
         except OSError:
@@ -92,10 +92,10 @@ class DataAnalyzerAgent:
             device=-1 if not config.use_gpu else 0
         )
         
-        # Load or initialize ML models
+        # load or initialize ML models
         self._load_or_initialize_models()
         
-        # Define sensitive data categories and their indicators
+        # define sensitive data categories and their indicators
         self.categories = {
             'financial': ['bank', 'credit', 'account', 'payment', 'transaction', '$', '€', '£'],
             'medical': ['health', 'medical', 'doctor', 'diagnosis', 'treatment', 'patient', 'prescription'],
@@ -129,12 +129,12 @@ class DataAnalyzerAgent:
                 random_state=42
             )
             
-            # Train with default data
+            # train with default data
             texts, labels = zip(*self.DEFAULT_TRAINING_DATA)
             X = self.vectorizer.fit_transform(texts)
             self.classifier.fit(X, labels)
             
-            # Save the trained models
+            # save the trained models
             joblib.dump(self.classifier, model_file)
             joblib.dump(self.vectorizer, vectorizer_file)
             self.logger.info("Successfully trained and saved new models")
@@ -170,17 +170,17 @@ class DataAnalyzerAgent:
     def _classify_sensitivity(self, text: str) -> Tuple[str, float]:
         """Classify text sensitivity using ML model"""
         try:
-            # Transform text using vectorizer
+            # transform text using vectorizer
             features = self.vectorizer.transform([text])
             
-            # Get prediction probabilities
+            # get prediction probabilities
             probas = self.classifier.predict_proba(features)[0]
             predicted_class = self.classifier.classes_[np.argmax(probas)]
             confidence = np.max(probas)
             
-            # Add additional checks for non-sensitive content
+            # add additional checks for non-sensitive content
             if predicted_class == "sensitive":
-                # Check if text contains any known sensitive patterns
+                # check if text contains any known sensitive patterns
                 has_sensitive_pattern = any(
                     pattern in text.lower()
                     for pattern in [
@@ -191,15 +191,13 @@ class DataAnalyzerAgent:
                 )
                 
                 if not has_sensitive_pattern:
-                    # If no sensitive patterns found, reduce confidence
+                    # if no sensitive patterns found, reduce confidence
                     confidence *= 0.5
-                    if confidence < 0.6:  # Threshold for reclassification
+                    if confidence < 0.6:  # threshold for reclassification
                         predicted_class = "not_sensitive"
-                        # Boost confidence for clearly non-sensitive text
-                        if len(text.split()) >= 3:  # At least 3 words
+                        if len(text.split()) >= 3:  # at least 3 words
                             confidence = max(confidence + 0.2, 0.7)
             else:
-                # For predicted non-sensitive text, boost confidence if no sensitive patterns
                 has_sensitive_pattern = any(
                     pattern in text.lower()
                     for pattern in [
@@ -230,25 +228,25 @@ class DataAnalyzerAgent:
             }
             
         try:
-            # Extract entities
+            # extract entities
             entities = self._extract_entities(text)
             
-            # Analyze sentiment
+            # analyze sentiment
             sentiment = self._analyze_sentiment(text)
             
-            # Classify sensitivity
+            # classify sensitivity
             sensitivity_class, sensitivity_conf = self._classify_sensitivity(text)
             
-            # Calculate initial risk score based on sensitivity
+            # calculate initial risk score based on sensitivity
             risk_score = sensitivity_conf if sensitivity_class == 'sensitive' else 0.0
             
-            # Adjust risk score based on entities and sentiment
+            # adjust risk score based on entities and sentiment
             if entities:
-                risk_score += min(len(entities) * 0.1, 0.3)  # Up to 0.3 increase for entities
+                risk_score += min(len(entities) * 0.1, 0.3)  # up to 0.3 increase for entities
             if sentiment['is_negative']:
-                risk_score += 0.2  # Increase risk for negative sentiment
+                risk_score += 0.2  # increase risk for negative sentiment
                 
-            # Identify sensitive data categories
+            # identify sensitive data categories
             categories = {}
             for category, indicators in self.categories.items():
                 matches = []
@@ -257,9 +255,9 @@ class DataAnalyzerAgent:
                         matches.append(indicator)
                 if matches:
                     categories[category] = matches
-                    risk_score += 0.1  # Increase risk for each matched category
+                    risk_score += 0.1  # increase risk for each matched category
             
-            # Normalize final risk score to 0-1 range
+            # normalize final risk score to 0-1 range
             risk_score = min(risk_score, 1.0)
             
             return {
@@ -323,18 +321,18 @@ class DataAnalyzerAgent:
         try:
             texts, labels = zip(*training_data)
             
-            # Combine with default training data for better generalization
+            # combine with default training data for better generalization
             all_texts = list(texts) + [text for text, _ in self.DEFAULT_TRAINING_DATA]
             all_labels = list(labels) + [label for _, label in self.DEFAULT_TRAINING_DATA]
             
-            # Fit vectorizer and transform texts
+            # fit vectorizer and transform texts
             X = self.vectorizer.fit_transform(all_texts)
             
-            # Train classifier
+            # train classifier
             self.classifier.fit(X, all_labels)
             
             if save_models:
-                # Save models
+                # save models
                 ensure_directory(self.config.model_path)
                 joblib.dump(self.classifier, 
                            self.config.model_path / "classifier.joblib")
@@ -348,14 +346,14 @@ class DataAnalyzerAgent:
 
 def main():
     """Main function to test the Data Analyzer Agent"""
-    # Setup logging
+    # setup logging
     logging.basicConfig(level=logging.INFO)
     
-    # Initialize agent
+    # initialize agent
     config = AnalyzerConfig()
     agent = DataAnalyzerAgent(config)
     
-    # Test analysis
+    # test analysis
     test_content = {
         'id': '123',
         'content': """
