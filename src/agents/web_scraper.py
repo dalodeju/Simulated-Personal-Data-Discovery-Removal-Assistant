@@ -12,14 +12,14 @@ from environment.ecosystem import DigitalEcosystem, EcosystemConfig
 from utils.common import setup_logging, load_config
 import logging
 
-# Load configuration
+# load configuration
 config = load_config().get('web_scraper', {
     'max_retries': 3,
     'retry_delay': 1.0,
     'confidence_threshold': 0.7
 })
 
-# Regex patterns for finding personal data
+# regex patterns for finding personal data
 PATTERNS = {
     'email': r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
     'phone': r'\b(?:\+?1[-.]?)?\(?([0-9]{3})\)?[-.]?([0-9]{3})[-.]?([0-9]{4})\b',
@@ -60,7 +60,7 @@ class WebScraperAgent:
         self.config = config or ScraperConfig()
         self.logger = logging.getLogger(__name__)
         
-        # Initialize regex patterns for personal data discovery
+        # initialize regex patterns for personal data discovery
         self.patterns = {
             'email': re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'),
             'phone': re.compile(r'\+?1?\d{9,15}|\(\d{3}\)\s*\d{3}[-.]?\d{4}|\d{3}[-.]?\d{3}[-.]?\d{4}'),
@@ -71,7 +71,7 @@ class WebScraperAgent:
             'url': re.compile(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[^\s]*')
         }
         
-        # Setup logging
+        # setup logging
         self.logger.info("Initializing web scraper agent...")
         
     def _extract_personal_data(self, text: str) -> Dict[str, List[str]]:
@@ -84,7 +84,7 @@ class WebScraperAgent:
         Returns:
             Dictionary mapping data types to lists of found values
         """
-        # Handle None or empty input gracefully
+        # handle none or empty input gracefully
         if text is None:
             self.logger.warning("None value provided for scanning")
             return {}
@@ -100,16 +100,16 @@ class WebScraperAgent:
         results = {}
         
         try:
-            # Look for each type of data
+            # look for each type of data
             for data_type, pattern in self.patterns.items():
-                # Find all matches
+                # find all matches
                 matches = pattern.findall(text)
                 if matches:
-                    # Clean and format matches
+                    # clean and format matches
                     cleaned_matches = []
                     for match in matches:
                         if isinstance(match, tuple):
-                            # Handle grouped matches (like phone numbers)
+                            # handle grouped matches (like phone numbers)
                             cleaned_match = '-'.join(match)
                         else:
                             cleaned_match = match.strip()
@@ -144,10 +144,10 @@ class WebScraperAgent:
             if not matches:
                 return 0.0
                 
-            # Base confidence from matches (up to 0.6)
+            # base confidence from matches (up to 0.6)
             base_confidence = min(len(matches) / 2, 1.0) * 0.6
             
-            # Context words that increase confidence
+            # context words that increase confidence
             context_words = {
                 'email': ['contact', 'email', '@', 'mail', 'address', 'e-mail', 'Email', 'EMAIL'],
                 'phone': ['call', 'phone', 'tel', 'contact', 'mobile', 'number', 'Phone', 'PHONE'],
@@ -158,18 +158,17 @@ class WebScraperAgent:
                 'url': ['website', 'link', 'site', 'web', 'http', 'https', 'URL']
             }
             
-            # Context score (up to 0.4)
+            # context score (up to 0.4)
             context_score = 0.0
             if data_type in context_words:
-                # Check for context words in the text
                 text_lower = text.lower()
                 context_matches = sum(1 for word in context_words[data_type] if word.lower() in text_lower)
                 context_score = min(context_matches / len(context_words[data_type]), 1.0) * 0.4
                 
-            # Format validation (0.3 if valid)
+            # format validation (0.3 if valid)
             format_score = 0.3 if self._validate_format(matches[0], data_type) else 0.0
                 
-            # Additional boost for exact field matches (0.2)
+            # additional boost for exact field matches (0.2)
             field_boost = 0.2 if any(
                 field.lower() == data_type.replace('_', ' ') or
                 field.lower() == data_type or
@@ -177,7 +176,7 @@ class WebScraperAgent:
                 for field in text.split()
             ) else 0.0
                 
-            # Combine scores with proper weighting
+            # combine scores 
             confidence = min(
                 base_confidence + context_score + format_score + field_boost,
                 1.0
@@ -199,16 +198,16 @@ class WebScraperAgent:
         """Additional format validation for specific data types"""
         try:
             if data_type == 'email':
-                # Check for valid email format
+                # check for valid email format
                 return '@' in value and '.' in value.split('@')[1]
                 
             elif data_type == 'phone':
-                # Check for valid phone number length
+                # check for valid phone number length
                 digits = ''.join(filter(str.isdigit, value))
                 return 10 <= len(digits) <= 15
                 
             elif data_type == 'credit_card':
-                # Basic Luhn algorithm check
+                # basic Luhn algorithm check
                 digits = ''.join(filter(str.isdigit, value))
                 if len(digits) < 13 or len(digits) > 19:
                     return False
@@ -227,11 +226,11 @@ class WebScraperAgent:
                 return total % 10 == 0
                 
             elif data_type == 'ip_address':
-                # Check valid IP address format
+                # check valid IP address format
                 parts = value.split('.')
                 return len(parts) == 4 and all(0 <= int(p) <= 255 for p in parts)
                 
-            return True  # Default to True for other types
+            return True  # default to True for other types
             
         except Exception:
             return False
@@ -251,7 +250,7 @@ class WebScraperAgent:
             return []
             
         try:
-            # Search for matching profiles
+            # search for matching profiles
             profiles = self.ecosystem.search_profiles(query)
             self.logger.debug(f"Found {len(profiles)} profiles")
             
@@ -263,12 +262,12 @@ class WebScraperAgent:
             for profile in profiles:
                 self.logger.debug(f"Processing profile: {profile}")
                 
-                # Convert profile to string for scanning if it's a dictionary
+                # convert profile to string for scanning if it's a dictionary
                 if isinstance(profile, dict):
-                    # Create a string representation of the profile content
+                    # create a string representation of the profile content
                     content = f"Email: {profile.get('email', '')}\n"
                     content += f"Phone: {profile.get('phone', '')}\n"
-                    # Add any other fields that might contain personal data
+                    # add any other fields that might contain personal data
                     for key, value in profile.items():
                         if key not in ['id', 'email', 'phone', 'visibility']:
                             content += f"{key}: {value}\n"
@@ -277,7 +276,7 @@ class WebScraperAgent:
                 
                 self.logger.debug(f"Profile content: {content}")
                 
-                # Extract personal data from profile content
+                # extract personal data from profile content
                 personal_data = self._extract_personal_data(content)
                 self.logger.debug(f"Extracted personal data: {personal_data}")
                 
@@ -285,14 +284,14 @@ class WebScraperAgent:
                     self.logger.debug("No personal data found in profile")
                     continue
                     
-                # Calculate confidence scores for each data type
+                # calculate confidence scores for each data type
                 confidence_scores = {
                     data_type: self._calculate_confidence(content, data_type)
                     for data_type in personal_data.keys()
                 }
                 self.logger.debug(f"Confidence scores: {confidence_scores}")
                 
-                # Filter out low confidence results
+                # filter out low confidence results
                 filtered_data = {
                     data_type: values
                     for data_type, values in personal_data.items()
