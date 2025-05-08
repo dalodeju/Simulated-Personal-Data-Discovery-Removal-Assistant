@@ -1,6 +1,5 @@
 """
-Data Generator for creating synthetic personal data in our simulated environment.
-This module generates realistic but fake personal data for testing our agents.
+Data Generator for creating fake personal data in our simulated environment.
 """
 
 import random
@@ -14,23 +13,23 @@ from dataclasses import dataclass
 
 @dataclass
 class DataConfig:
-    """Configuration for data generation"""
+    """config for data generation"""
     num_profiles: int = 100
     num_posts_per_profile: tuple = (5, 20)  # (min, max)
     noise_level: float = 0.1  # 0.0 to 1.0
-    sensitive_data_ratio: float = 0.3  # Ratio of content containing sensitive data
+    sensitive_data_ratio: float = 0.3  # ratio of content containing sensitive data
 
 class DataGenerator:
-    """Generates synthetic personal data for the simulated environment"""
+    """generates fake personal data for the simulated environment"""
     
     def __init__(self, config: DataConfig):
         self.config = config
         self.fake = faker.Faker()
         self.sensitive_patterns = [
             r'\b\d{3}-\d{2}-\d{4}\b',  # SSN
-            r'\b\d{16}\b',  # Credit card
-            r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',  # Email
-            r'\b\d{10}\b',  # Phone number
+            r'\b\d{16}\b',  # credit card
+            r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b',  # email
+            r'\b\d{10}\b',  # phone number
         ]
 
     def generate_profile(self) -> Dict[str, Any]:
@@ -55,7 +54,7 @@ class DataGenerator:
         return profile
 
     def generate_post(self, profile_id: str, is_sensitive: bool = False) -> Dict[str, Any]:
-        """Generate a single post, optionally containing sensitive information"""
+        """generate a post, sometimes containing sensitive information"""
         post = {
             'id': self.fake.uuid4(),
             'profile_id': profile_id,
@@ -106,12 +105,12 @@ class DataGenerator:
         profiles = []
         posts = []
         
-        # Generate profiles
+        # generate profiles
         for _ in range(self.config.num_profiles):
             profile = self.generate_profile()
             profiles.append(profile)
             
-            # Generate posts for each profile
+            # generate posts for each profile
             num_posts = random.randint(*self.config.num_posts_per_profile)
             for _ in range(num_posts):
                 is_sensitive = random.random() < self.config.sensitive_data_ratio
@@ -119,7 +118,7 @@ class DataGenerator:
                 post['content'] = self._add_noise(post['content'])
                 posts.append(post)
 
-        # Save to files
+        # save to files
         with open(os.path.join(output_dir, 'profiles.json'), 'w') as f:
             json.dump(profiles, f, indent=2)
         
