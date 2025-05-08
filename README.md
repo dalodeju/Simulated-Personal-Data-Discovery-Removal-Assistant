@@ -1,24 +1,19 @@
 # Simulated Personal Data Discovery & Removal Assistant
 
-A robust multi-agent system for discovering, analyzing, and recommending actions on personal data in a simulated digital ecosystem.
+This project builds and evaluates a multi‑agent system for finding, analyzing, and recommending actions on personal data in a controlled, simulated digital environment. Data privacy is a growing concern: companies, regulators, and individuals need tools to locate exposed personal information, assess its risk, and decide how to mitigate exposure. A multi‑agent approach lets specialized components focus on discovery, classification, risk scoring, and recommendations, then coordinate to produce a unified workflow.
 
 ## Project Overview
 
-This project simulates a digital environment with synthetic user profiles, posts, and articles. Four specialized agents work together to:
-- Discover digital traces of personal data
-- Analyze and classify sensitive information using NLP
-- Evaluate risk based on content features
-- Recommend actions for data removal or protection
+This project simulates a digital environment with synthetic user profiles, posts, and articles. 
 
-The system supports experiments to analyze:
-- The effect of agent coordination on discovery accuracy
-- The impact of risk evaluation methods on speed and accuracy
-- The robustness of agents under varying data noise
+- **Web Scraper Agent**: Locates digital traces in the ecosystem
+- **Data Analyzer Agent**: Uses NLP to classify sensitive data
+- **Risk Evaluation Agent**: Assigns risk scores based on content features
+- **Recommendation Agent**: Recommends steps for data removal or protection
 
 ## Features
 
-- Modular, extensible agent architecture
-- Synthetic, parameterizable digital ecosystem
+- Parameterizable digital ecosystem
 - Multiple agent coordination strategies
 - Configurable risk evaluation methods
 - Precision, recall, F1, and timing metrics
@@ -29,7 +24,7 @@ The system supports experiments to analyze:
 1. Clone the repository:
    ```bash
    git clone https://github.com/dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant.git
-   cd dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant
+   cd Simulated-Personal-Data-Discovery-Removal-Assistant
    ```
 2. Create and activate a virtual environment:
    ```bash
@@ -54,9 +49,9 @@ The system supports experiments to analyze:
 ## Project Structure
 
 - `src/`
-  - `main.py` - Main pipeline and experiment runner
+  - `main.py` - Main pipeline
   - `agents/`
-    - `base_agent.py` - Abstract agent class
+    - `base_agent.py` - Base Agent Class
     - `web_scraper.py` - Web Scraper Agent
     - `data_analyzer.py` - Data Analyzer Agent (NLP)
     - `risk_evaluator.py` - Risk Evaluation Agent
@@ -71,14 +66,14 @@ The system supports experiments to analyze:
       - `experiment.py` - Advanced experiment metrics
 - `experiments/`
   - `run_experiments.py` - Main experiment script
-  - `data/` - Synthetic profiles and posts
-  - `results/` - Experiment outputs (plots, CSVs)
+  - `data/` - Generated profiles and posts
+  - `results/` - Experiment outputs (figures, CSVs)
 - `models/`
   - `analyzer/` - Trained model files (`vectorizer.joblib`, `classifier.joblib`)
-- `requirements.txt` - Python dependencies
-- `config.yaml` - Main configuration file
-- `README.md` - Project documentation
-- `.gitignore` - Git ignore rules
+- `requirements.txt` - Dependencies
+- `config.yaml` - Main config file
+- `README.md` - Project docs
+- `.gitignore` - Git ignore
 
 ## Running Experiments
 
@@ -89,26 +84,19 @@ python experiments/run_experiments.py
 This will:
 - Run experiments across multiple agent strategies, risk methods, and noise levels
 - Save results and plots to `experiments/results/`
-- Print summary tables for precision, recall, F1, and timing
+- Print summary tables for precision, recall, F1, and total processing time
 
 ## Interpreting Results
 
 - **Summary tables**: Printed in the terminal for each research question
-- **Plots**: Saved in `experiments/results/` (e.g., F1 vs. noise, strategy comparisons)
+- **Figures**: Saved in `experiments/results/` (e.g., F1 vs. noise, strategy comparisons)
 - **CSV**: All raw results in `experiment_results.csv`
 
-Key plots include:
+Figures include:
 - Precision/Recall/F1 by coordination strategy
 - F1 vs. noise level
 - F1 by risk evaluation method
 - Processing time by risk method
-
-## Agents
-
-- **Web Scraper Agent**: Locates digital traces in the ecosystem
-- **Data Analyzer Agent**: Uses NLP to classify sensitive data
-- **Risk Evaluation Agent**: Assigns risk scores based on content features
-- **Recommendation Agent**: Recommends steps for data removal or protection
 
 ## Future Work
 
