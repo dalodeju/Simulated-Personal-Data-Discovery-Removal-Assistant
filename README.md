@@ -11,14 +11,6 @@ This project simulates a digital environment with synthetic user profiles, posts
 - **Risk Evaluation Agent**: Assigns risk scores based on content features
 - **Recommendation Agent**: Recommends steps for data removal or protection
 
-## Features
-
-- Parameterizable digital ecosystem
-- Multiple agent coordination strategies
-- Configurable risk evaluation methods
-- Precision, recall, F1, and timing metrics
-- Automated experiment pipeline and result visualization
-
 ## Installation
 
 1. Clone the repository:
