@@ -1,4 +1,5 @@
 """Personal Data Discovery & Removal Assistant
+Main script that coordinates all the agents and processes data.
 """
 
 import logging
@@ -31,7 +32,7 @@ def process_data(text_data):
     
     try:
         # Initialize all our agents
-        ecosystem = DigitalEcosystem(EcosystemConfig())
+        ecosystem = DigitalEcosystem(EcosystemConfig(error_rate=0))
         scraper = WebScraperAgent(ecosystem, ScraperConfig())
         analyzer = DataAnalyzerAgent(AnalyzerConfig())
         risk_eval = RiskEvaluatorAgent(RiskEvaluatorConfig())
@@ -123,7 +124,7 @@ def run_pipeline(strategy='sequential', noise=0.1, risk_config=None, verbose=Fal
     # Start timing the full experiment
     pipeline_start = datetime.now()
     # Set up environment with specified noise
-    ecosystem = DigitalEcosystem(EcosystemConfig(error_rate=noise))
+    ecosystem = DigitalEcosystem(EcosystemConfig(error_rate=0))
     scraper = WebScraperAgent(ecosystem, ScraperConfig())
     analyzer = DataAnalyzerAgent(AnalyzerConfig())
     # Fix: Convert dict risk_config to RiskEvaluatorConfig if needed
@@ -199,40 +200,39 @@ def main():
     setup_logging()
     logging.info("Starting personal data scan...")
     
-    # Sample text with personal data (you'd normally get this from files/input)
+    # sample text with personal data
     sample_text = """
     Please contact John at john.doe@email.com or call 555-123-4567.
     His SSN is 123-45-6789 and credit card: 4111-1111-1111-1111.
     """
     
-    # Process the text
+    # process the text
     results = process_data(sample_text)
     
     if 'error' in results:
         logging.error(f"Processing failed: {results['error']}")
         return
         
-    # Calculate performance metrics
+    # calculate performance metrics
     metrics = calculate_metrics(results)
     
-    # Save everything
+    # save everything
     output_file = save_results(results)
     
-    # Compute precision, recall, F1
-    # Get ground truth for each discovered profile
+    # compute precision, recall, F1
+    # get ground truth for each discovered profile
     ecosystem = DigitalEcosystem(EcosystemConfig())
-    # Find the profiles that were discovered (by id)
+    # find the profiles that were discovered (by id)
     discovered_ids = [d.get('profile_id') for d in results['stages']['discovery']]
     ground_truths = [next((p for p in ecosystem.profiles if p['id'] == str(pid)), {}) for pid in discovered_ids]
     precision, recall, f1 = compute_precision_recall(results['stages']['discovery'], ground_truths)
     
-    # Show summary
+    # show summary
     print("\nProcessing Complete!")
     print(f"Found {len(results['stages']['discovery'])} items of personal data")
     print(f"Risk Levels: {[r.get('level', 'unknown') for r in results['stages']['risk']]}")
     print(f"Generated {sum(r['summary']['total_recommendations'] for r in results['stages']['recommendations'])} recommendations")
     print(f"\nResults saved to: {output_file}")
-    print("\nPerformance Metrics:")
     print(format_metrics_report(metrics))
     print(f"\nPrecision: {precision:.2f}  Recall: {recall:.2f}  F1: {f1:.2f}")
     print_detailed_results(results, sample_size=5)
