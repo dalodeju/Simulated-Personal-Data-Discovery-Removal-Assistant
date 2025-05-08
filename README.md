@@ -81,14 +81,12 @@ This will:
 ## Interpreting Results
 
 - **Summary tables**: Printed in the terminal for each research question
-- **Figures**: Saved in `experiments/results/` (e.g., F1 vs. noise, strategy comparisons)
 - **CSV**: All raw results in `experiment_results.csv`
-
-Figures include:
-- Precision/Recall/F1 by coordination strategy
-- F1 vs. noise level
-- F1 by risk evaluation method
-- Processing time by risk method
+- **Figures**: Saved in `experiments/results/`: 
+  - Precision/Recall/F1 vs. Coordination Strategy
+  - Precision/Recall/F1 vs. Risk Evaluation Method
+  - F1 vs. Noise Level
+  - Processing Time vs. Risk Method
 
 ## Future Work
 
