@@ -1,13 +1,12 @@
 """
 Recommendation Agent for suggesting data protection and removal actions.
-Uses templates to generate practical recommendations based on risk assessment.
 """
 
 import logging
 from typing import Dict, Any, List
 from datetime import datetime
 
-# Action templates by risk level
+# action templates by risk level
 ACTIONS = {
     'high': [
         "Immediately remove {data_type} from {location}",
@@ -26,8 +25,7 @@ ACTIONS = {
     ]
 }
 
-# Specific actions for different types of data
-# TODO: Add more specific actions for other data types
+# specific actions for different types of data
 DATA_ACTIONS = {
     'ssn': [
         "Remove SSN immediately",
