@@ -28,7 +28,7 @@ The system supports experiments to analyze:
 
 1. Clone the repository:
    ```bash
-   git clone dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant
+   git clone https://github.com/dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant.git
    cd dalodeju/Simulated-Personal-Data-Discovery-Removal-Assistant
    ```
 2. Create and activate a virtual environment:
